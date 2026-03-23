@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+}
+// ------------------------------------------------------
+// 1. ระบบจัดการผู้ใช้งาน (สำหรับ Admin Login)
+// ------------------------------------------------------
+model User {
+  id       String  @id @default(uuid())
+  email    String  @unique
+  password String
+  name     String?
+  role     Role    @default(USER)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+// ------------------------------------------------------
+// 2. ข้อมูลรถยนต์ (Car Catalog)
+// ------------------------------------------------------
+model Car {
+  id   String @id @default(cuid())
+  slug String @unique
+
+  // ข้อมูลพื้นฐาน
+  brand     String
+  modelName String
+  year      Int
+  price     Int
+  mileage   Int
+  color     String?
+
+  // รายละเอียดเชิงลึก
+  description String?  @db.Text
+  features    String[]
+
+  // สถานะและรูปภาพ
+  status     CarStatus  @default(AVAILABLE)
+  coverImage String
+  gallery    CarImage[]
+
+  // ข้อมูลระบบ
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([brand, status, year])
+}
+
+// ------------------------------------------------------
+// 3. แกลเลอรีรูปรถ (สำหรับหน้ารายละเอียด)
+// ------------------------------------------------------
+model CarImage {
+  id    String @id @default(cuid())
+  url   String
+  order Int    @default(0)
+
+  carId String
+  car   Car    @relation(fields: [carId], references: [id], onDelete: Cascade)
+}
+
+enum CarStatus {
+  AVAILABLE
+  BOOKED
+  SOLD
+}
