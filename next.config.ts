@@ -5,8 +5,16 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ["@prisma/client"],
   experimental: {
     serverActions: {
-      bodySizeLimit: "20mb",
+      bodySizeLimit: "20mb", // เพิ่มขนาด limit สำหรับการอัปโหลดไฟล์
     },
+  },
+  images: { 
+    remotePatterns: [ // อนุญาตให้แสดงรูปภาพจาก Supabase
+      {
+        protocol: "https",
+        hostname: "qcaoytixhlkraefskrpm.supabase.co", 
+      },
+    ],
   },
 };
 

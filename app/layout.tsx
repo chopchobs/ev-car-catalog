@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Prompt } from "next/font/google"; // 1. Import Prompt
 import "./globals.css";
 
 const geistSans = Geist({
@@ -12,9 +12,17 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// 2. Configure Prompt font
+const prompt = Prompt({
+  weight: ['300', '400', '500', '600', '700'],
+  subsets: ["latin", "thai"],
+  variable: "--font-prompt",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "EVo Auto Drive",
-  description: "EVo Auto Drive",
+  description: "EVo Auto Drive - Premium EV Cars",
 };
 
 export default function RootLayout({
@@ -24,10 +32,10 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      lang="th"
+      className={`${geistSans.variable} ${geistMono.variable} ${prompt.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col font-sans">{children}</body>
     </html>
   );
 }
