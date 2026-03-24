@@ -1,7 +1,7 @@
-"use client";
+"use client"; 
 
 import { useState } from "react";
-
+// ImageGallery - แสดงรูปภาพรถยนต์
 export default function ImageGallery({ images, carName }: { images: string[], carName: string }) {
   const [currentIndex, setCurrentIndex] = useState(0);
 

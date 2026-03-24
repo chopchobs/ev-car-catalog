@@ -1,7 +1,7 @@
 "use client";
 import { usePathname } from 'next/navigation';
 
-export default function AdminNavbar() {
+export default function AdminNavbar({ user }: { user?: any }) {
   const pathname = usePathname();
 
   // สร้างฟังก์ชันง่ายๆ แปลง Path เป็นชื่อหน้าเว็บ เพื่อโชว์บน Navbar
@@ -10,6 +10,11 @@ export default function AdminNavbar() {
     if (pathname.includes('/admin/cars')) return 'จัดการข้อมูลรถยนต์';
     if (pathname.includes('/admin/users')) return 'จัดการผู้ใช้งาน';
     return 'ระบบจัดการหลังบ้าน';
+  };
+
+  const getInitials = (name?: string) => {
+    if (!name) return "A";
+    return name.charAt(0).toUpperCase();
   };
 
   return (
@@ -48,12 +53,12 @@ export default function AdminNavbar() {
         {/* โปรไฟล์ผู้ใช้งาน */}
         <div className="flex items-center gap-3 cursor-pointer group">
           <div className="text-right hidden sm:block">
-            <p className="text-sm font-medium text-gray-700 group-hover:text-cyan-600 transition-colors">Admin EVo</p>
-            <p className="text-xs text-gray-500">ผู้ดูแลระบบ</p>
+            <p className="text-sm font-bold text-gray-800 group-hover:text-cyan-600 transition-colors">{user?.name || "Admin"}</p>
+            <p className="text-xs text-cyan-600 font-semibold mt-0.5">ผู้ดูแลระบบ</p>
           </div>
           {/* รูปโปรไฟล์ */}
-          <div className="w-10 h-10 rounded-full bg-cyan-100 border-2 border-cyan-500 text-cyan-700 flex items-center justify-center font-bold shadow-sm">
-            A
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 border border-cyan-200 text-white flex items-center justify-center font-bold shadow-md shadow-cyan-500/20">
+            {getInitials(user?.name)}
           </div>
         </div>
 
