@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import FavoriteButton from './FavoriteButton';
 
 // กำหนด Type ให้ตรงกับข้อมูลที่ดึงมาจาก Prisma
 interface Car {
@@ -14,6 +15,7 @@ interface Car {
   coverImage: string | null;
   status: 'AVAILABLE' | 'BOOKED' | 'SOLD';
   gallery?: { id: string; url: string; order: number }[];
+  isFavorite?: boolean;
 }
 
 export default function CarCard({ car }: { car: Car }) {
@@ -59,6 +61,8 @@ export default function CarCard({ car }: { car: Car }) {
       
       {/* ---------------- รูปภาพ (Carousel) ---------------- */}
       <div className="relative aspect-[4/3] w-full bg-gray-50 overflow-hidden group/gallery">
+        {/* ปุ่ม Favorite มุมซ้ายบน */}
+        <FavoriteButton carId={String(car.id)} initialIsFavorite={car.isFavorite} />
         {hasImages ? (
           <>
             <img 

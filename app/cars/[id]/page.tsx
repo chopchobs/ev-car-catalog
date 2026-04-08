@@ -4,19 +4,23 @@ import ImageGallery from "@/components/ui/ImageGallery";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import FavoriteButton from "@/components/ui/FavoriteButton";
+import { getSavedCarIds } from "@/app/action/favorite";
 
 export default async function CarDetailPage({ params }: { params: { id: string } }) {
   const { id } = await params;
-  
-  const car = await prisma.car.findUnique({
-    where: { id },
-    include: { gallery: { orderBy: { order: 'asc' } } }
-  });
+  const [car, savedCarIds] = await Promise.all([
+    prisma.car.findUnique({
+      where: { id },
+      include: { gallery: { orderBy: { order: 'asc' } } }
+    }),
+    getSavedCarIds()
+  ]);
+
 
   if (!car) {
     return notFound();
   }
-
   // เตรียมชุดรูปภาพ
   const allImages = [
     car.coverImage,
@@ -25,7 +29,6 @@ export default async function CarDetailPage({ params }: { params: { id: string }
 
   const formattedPrice = new Intl.NumberFormat('th-TH').format(car.price);
   const formattedMileage = new Intl.NumberFormat('th-TH').format(car.mileage);
-
   // ฟังก์ชันเลือกสีป้ายสถานะ
   const getStatusBadge = (status: 'AVAILABLE' | 'BOOKED' | 'SOLD') => {
     switch (status) {
@@ -78,10 +81,15 @@ export default async function CarDetailPage({ params }: { params: { id: string }
                   {getStatusBadge(car.status)}
                 </div>
 
-                {/* Model Name */}
-                <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-6 leading-tight">
-                  {car.modelName}
-                </h1>
+                {/* Model Name & Favorite */}
+                <div className="flex items-center gap-4 mb-6 relative">
+                  <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 leading-tight">
+                    {car.modelName}
+                  </h1>
+                  <div className="relative w-12 h-12 flex-shrink-0">
+                    <FavoriteButton carId={car.id} initialIsFavorite={savedCarIds.includes(car.id)} />
+                  </div>
+                </div>
 
                 {/* ราคา */}
                 <div className="mb-8">

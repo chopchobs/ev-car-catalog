@@ -63,12 +63,23 @@ export default function ProfileDropdown({ user }: { user: UserProfile }) {
             <Link 
               href="/profile" 
               onClick={() => setIsOpen(false)}
-              className="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:text-cyan-700 hover:bg-cyan-50 rounded-xl transition-all font-semibold"
+              className="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:text-cyan-700 hover:bg-cyan-50 rounded-xl transition-all font-semibold group"
             >
               <div className="bg-gray-100 p-1.5 rounded-lg text-gray-500 group-hover:bg-cyan-100 group-hover:text-cyan-600 transition-colors">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
               </div>
               แก้ไขข้อมูลส่วนตัว
+            </Link>
+
+            <Link 
+              href="/profile/favorites" 
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all font-semibold group"
+            >
+              <div className="bg-gray-100 p-1.5 rounded-lg text-gray-500 group-hover:bg-red-100 group-hover:text-red-500 transition-colors">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>
+              </div>
+              รถคันโปรด
             </Link>
 
             {user.role === 'ADMIN' && (

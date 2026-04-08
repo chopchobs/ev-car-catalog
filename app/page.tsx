@@ -3,8 +3,12 @@ import Footer from '../components/layout/Footer';
 import Hero from '@/components/layout/Hero';
 import CarCard from '@/components/ui/CarCard';
 import prisma from '@/lib/prisma';
+import LogoBar from '@/components/layout/LogoBar';
+import { getSavedCarIds } from '@/app/action/favorite';
 
 export default async function Home() {
+  const savedCarIds = await getSavedCarIds();
+
   const featuredCars = await prisma.car.findMany({
     take: 4,
     orderBy: {
@@ -35,13 +39,7 @@ export default async function Home() {
             <p className="text-sm font-medium text-gray-400 tracking-wider uppercase mb-6">
               แบรนด์ชั้นนำที่ลูกค้าไว้วางใจ
             </p>
-            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60 grayscale hover:grayscale-0 transition-all duration-300">
-              {['TESLA', 'BYD', 'MG', 'ORA', 'VOLVO', 'CHANGAN', 'Neta'].map((brand) => (
-                <span key={brand} className="text-2xl md:text-3xl font-bold font-sans tracking-tight text-gray-800">
-                  {brand}
-                </span>
-              ))}
-            </div>
+            <LogoBar />
           </div>
         </section>
 
@@ -70,7 +68,7 @@ export default async function Home() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
               {featuredCars.map((car) => (
-                <CarCard key={car.id} car={car} />
+                <CarCard key={car.id} car={{ ...car, isFavorite: savedCarIds.includes(car.id) }} />
               ))}
             </div>
             

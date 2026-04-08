@@ -4,6 +4,7 @@ import Footer from "@/components/layout/Footer";
 import CarCard from "@/components/ui/CarCard";
 import CatalogFilter from "@/components/ui/CatalogFilter";
 import Hero from "@/components/layout/Hero";
+import { getSavedCarIds } from "@/app/action/favorite";
 
 // Next.js 15 requires searchParams to be awaited as a Promise
 export default async function CatalogPage({
@@ -15,7 +16,6 @@ export default async function CatalogPage({
   const search = typeof resolvedParams.search === "string" ? resolvedParams.search : "";
   const brand = typeof resolvedParams.brand === "string" ? resolvedParams.brand : "ALL";
   const status = typeof resolvedParams.status === "string" ? resolvedParams.status : "ALL";
-
   // สร้างเงื่อนไข Prisma แบบ Dynamic
   // ถ้าพารามิเตอร์มาเป็น ALL ให้ข้ามไป (ไม่ใส่เงื่อนไข)
   const whereClause: any = {};
@@ -36,7 +36,7 @@ export default async function CatalogPage({
   }
 
   // ใช้ Promise.all เพื่อดึงข้อมูลพร้อมกัน (ไม่ต้องรอให้เสร็จทีละอัน ประหยัดเวลา)
-  const [cars, distinctBrands] = await Promise.all([
+  const [cars, distinctBrands, savedCarIds] = await Promise.all([
     // 1. ดึงรูปรถบวกเงื่อนไขตัวกรอง
     prisma.car.findMany({
       where: whereClause,
@@ -48,8 +48,9 @@ export default async function CatalogPage({
       select: { brand: true },
       distinct: ["brand"],
     }),
+    // 3. ดึงรถที่ถูกใจของผู้ใช้
+    getSavedCarIds(),
   ]);
-
   // สกัดเอาเฉพาะ string ชื่อแบรนด์และเรียงตัวอักษร A-Z
   const uniqueBrands = distinctBrands.map(item => item.brand).sort();
 
@@ -79,7 +80,7 @@ export default async function CatalogPage({
           {cars.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
               {cars.map((car) => (
-                <CarCard key={car.id} car={car} />
+                <CarCard key={car.id} car={{ ...car, isFavorite: savedCarIds.includes(car.id) }} />
               ))}
             </div>
           ) : (
