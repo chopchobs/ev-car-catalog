@@ -9,6 +9,7 @@ export default function Sidebar({ user }: { user?: any }) {
     { name: '📊 แดชบอร์ด', path: '/admin' },
     { name: '🚗 จัดการรถยนต์', path: '/admin/cars' },
     { name: '👥 จัดการผู้ใช้', path: '/admin/users' },
+    { name: '✉️ ข้อความติดต่อ', path: '/admin/inquiries' },
   ];
   return (
     <aside className="w-64 bg-[#0b1120] text-white flex flex-col min-h-screen">

@@ -15,6 +15,8 @@ model User {
   name     String?
   role     Role    @default(USER)
 
+  savedCars SavedCar[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -47,6 +49,7 @@ model Car {
   status     CarStatus  @default(AVAILABLE)
   coverImage String
   gallery    CarImage[]
+  savedBy    SavedCar[]
 
   // ข้อมูลระบบ
   createdAt DateTime @default(now())
@@ -71,4 +74,40 @@ enum CarStatus {
   AVAILABLE
   BOOKED
   SOLD
+}
+
+// ------------------------------------------------------
+// 4. รถคันโปรด (Saved Cars / Favorites)
+// ------------------------------------------------------
+model SavedCar {
+  id        String   @id @default(cuid())
+  userId    String
+  carId     String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  car       Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, carId])
+}
+
+// ------------------------------------------------------
+// 5. ระบบติดต่อและนัดหมาย (Contact & Inquiry)
+// ------------------------------------------------------
+model Inquiry {
+  id        String       @id @default(cuid())
+  firstName String
+  lastName  String
+  email     String
+  phone     String?
+  subject   String?
+  message   String       @db.Text
+  status    InquiryStatus @default(UNREAD)
+
+  createdAt DateTime     @default(now())
+}
+
+enum InquiryStatus {
+  UNREAD
+  READ
 }

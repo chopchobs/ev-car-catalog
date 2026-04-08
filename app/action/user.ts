@@ -5,14 +5,14 @@ import { verifyToken } from "@/lib/auth";
 import { cookies } from "next/headers";
 
 // เช็คสิทธิ์และดึงข้อมูลของ Admin ที่กำลังล็อกอินอยู่
-async function getAdminSession() {
+export async function getAdminSession() {
   const token = (await cookies()).get("session")?.value;
   if (!token) return null;
   const session = await verifyToken(token);
   if (session?.role !== 'ADMIN') return null;
   return session;
 }
-
+ // อัปเดตสิทธิ์ผู้ใช้
 export async function updateUserRole(userId: string, newRole: string) {
   const admin = await getAdminSession();
   if (!admin) return { error: "ไม่มีสิทธิ์เข้าถึง" };
@@ -29,7 +29,7 @@ export async function updateUserRole(userId: string, newRole: string) {
     return { error: "เกิดข้อผิดพลาดในการอัปเดตสิทธิ์" };
   }
 }
-
+ // ลบผู้ใช้
 export async function deleteUser(userId: string) {
   const admin = await getAdminSession();
   if (!admin) return { error: "ไม่มีสิทธิ์เข้าถึง" };

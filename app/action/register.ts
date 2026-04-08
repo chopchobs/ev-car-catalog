@@ -4,11 +4,12 @@ import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
 export async function registerUser(formData: FormData) {
+  // ดึงข้อมูลจากฟอร์ม
   const name = formData.get("name") as string;
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const confirmPassword = formData.get("confirmPassword") as string;
-
+ // ตรวจสอบว่ากรอกข้อมูลครบถ้วนหรือไม่
   if (!name || !email || !password) {
     return { error: "กรุณากรอกข้อมูลให้ครบถ้วน" };
   }
@@ -20,13 +21,13 @@ export async function registerUser(formData: FormData) {
   if (password.length < 6) {
     return { error: "รหัสผ่านต้องมีความยาวอย่างน้อย 6 ตัวอักษร" };
   }
-
+ // 
   try {
     // เช็คว่าอีเมลนี้ถูกใช้สมัครไปหรือยัง
     const existingUser = await prisma.user.findUnique({
       where: { email },
     });
-
+    // ถ้ามีผู้ใช้แล้ว ให้คืนค่า error
     if (existingUser) {
       return { error: "อีเมลนี้มีผู้ใช้งานแล้ว โปรดใช้อีเมลอื่น หรือเข้าสู่ระบบ" };
     }

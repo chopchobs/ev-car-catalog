@@ -1,18 +1,19 @@
 import Navbar from "@/components/layout/Navbar"
+import ContactForm from "@/components/ui/ContactForm"
 
 export default function ContactPage() {
     return (
-        <div className="min-h-screen bg-neutral-50 flex flex-col font-sans">
+        <div className="min-h-screen bg-neutral-50 flex flex-col">
             <Navbar/>
             
             {/* Header Section */}
             <div className="pt-32 pb-16 bg-white border-b border-neutral-200">
               <div className="container mx-auto px-6 max-w-5xl">
                 <h1 className="text-4xl md:text-5xl font-light tracking-tight text-neutral-900 mb-4">
-                  Get in touch
+                  ติดต่อเรา
                 </h1>
                 <p className="text-lg text-neutral-500 max-w-2xl font-light">
-                  Have a question about our EV catalog? Whether you're interested in a specific model, need support, or just want to say hello, we're here to help.
+                  มีคำถามเกี่ยวกับแคตตาล็อกรถยนต์ไฟฟ้าของเราหรือไม่? ไม่ว่าคุณจะสนใจรถยนต์รุ่นใด ต้องการความช่วยเหลือ หรือเพียงต้องการทักทาย เราพร้อมช่วยเหลือคุณ
                 </p>
               </div>
             </div>
@@ -24,7 +25,7 @@ export default function ContactPage() {
                 {/* Left Side: Contact Info */}
                 <div className="flex flex-col space-y-12">
                   <div>
-                    <h2 className="text-xl font-medium text-neutral-900 mb-6">Contact Information</h2>
+                    <h2 className="text-xl font-medium text-neutral-900 mb-6">ข้อมูลการติดต่อ</h2>
                     <div className="space-y-6">
                       
                       {/* Address */}
@@ -93,42 +94,7 @@ export default function ContactPage() {
                 </div>
 
                 {/* Right Side: Contact Form */}
-                <div className="bg-white rounded-2xl p-8 md:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-neutral-100">
-                  <form className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <label htmlFor="firstName" className="block text-sm font-medium text-neutral-700">First Name</label>
-                        <input type="text" id="firstName" className="w-full px-4 py-3 rounded-xl border border-neutral-200 bg-neutral-50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all duration-200" placeholder="John" />
-                      </div>
-                      <div className="space-y-2">
-                        <label htmlFor="lastName" className="block text-sm font-medium text-neutral-700">Last Name</label>
-                        <input type="text" id="lastName" className="w-full px-4 py-3 rounded-xl border border-neutral-200 bg-neutral-50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all duration-200" placeholder="Doe" />
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <label htmlFor="email" className="block text-sm font-medium text-neutral-700">Email Address</label>
-                      <input type="email" id="email" className="w-full px-4 py-3 rounded-xl border border-neutral-200 bg-neutral-50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all duration-200" placeholder="john@example.com" />
-                    </div>
-
-                    <div className="space-y-2">
-                      <label htmlFor="subject" className="block text-sm font-medium text-neutral-700">Subject</label>
-                      <input type="text" id="subject" className="w-full px-4 py-3 rounded-xl border border-neutral-200 bg-neutral-50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all duration-200" placeholder="How can we help?" />
-                    </div>
-
-                    <div className="space-y-2">
-                      <label htmlFor="message" className="block text-sm font-medium text-neutral-700">Message</label>
-                      <textarea id="message" rows={5} className="w-full px-4 py-3 rounded-xl border border-neutral-200 bg-neutral-50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all duration-200 resize-none" placeholder="Tell us more about your inquiry..."></textarea>
-                    </div>
-
-                    <button type="button" className="w-full bg-neutral-900 hover:bg-neutral-800 text-white font-medium py-3.5 px-6 rounded-xl transition-colors duration-200 flex items-center justify-center space-x-2 group">
-                      <span>Send Message</span>
-                      <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                      </svg>
-                    </button>
-                  </form>
-                </div>
+                <ContactForm />
 
               </div>
             </main>

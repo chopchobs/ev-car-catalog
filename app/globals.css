@@ -7,3 +7,14 @@
 body {
   font-family: var(--font-sans-thai);
 }
+
+/* เพิ่มส่วนนี้ต่อท้ายไฟล์ globals.css ของคุณ */
+@layer utilities {
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+}

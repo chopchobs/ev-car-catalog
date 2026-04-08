@@ -25,7 +25,7 @@ export async function GET() {
         password: hashedPassword, // เราเก็บรหัสที่ผ่านการทุบทำเละแล้วแบบนี้! (ตัวหนังสือแปลกๆ)
         name: "Super Admin",
         role: "ADMIN",
-      },
+      }
     });
 
     return NextResponse.json({ 

@@ -38,7 +38,8 @@ export default async function AdminDashboardPage() {
       select: { id: true, name: true, email: true, role: true, createdAt: true }
     })
   ]);
-
+  
+  // คำนวณจำนวนรถที่พร้อมขายและจำนวนสมาชิก
   const availableCars = totalCars - soldCars;
   const memberUsers = totalUsers - adminUsers;
 
