@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Prompt } from "next/font/google"; // 1. Import Prompt
 import "./globals.css";
+import { CompareProvider } from "@/providers/CompareProvider";
+import CompareFloatingBar from "@/components/ui/CompareFloatingBar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,7 +37,12 @@ export default function RootLayout({
       lang="th"
       className={`${geistSans.variable} ${geistMono.variable} ${prompt.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans">{children}</body>
+      <body className="min-h-full flex flex-col font-sans">
+        <CompareProvider>
+          {children}
+          <CompareFloatingBar />
+        </CompareProvider>
+      </body>
     </html>
   );
 }

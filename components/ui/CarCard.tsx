@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import FavoriteButton from './FavoriteButton';
+import { useCompare } from '@/providers/CompareProvider';
 
 // กำหนด Type ให้ตรงกับข้อมูลที่ดึงมาจาก Prisma
 interface Car {
@@ -20,6 +21,9 @@ interface Car {
 
 export default function CarCard({ car }: { car: Car }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const { selectedCarIds, toggleCompare } = useCompare();
+
+  const isComparing = selectedCarIds.includes(String(car.id));
 
   // แปลงตัวเลขให้มีลูกน้ำ
   const formattedPrice = new Intl.NumberFormat('th-TH').format(car.price);
@@ -109,8 +113,24 @@ export default function CarCard({ car }: { car: Car }) {
         )}
         
         {/* ป้ายสถานะ (ลอยอยู่บนรูป) */}
-        <div className="absolute top-3 right-3 z-20">
+        <div className="absolute top-3 right-3 z-20 flex flex-col gap-2 items-end">
           {getStatusBadge(car.status)}
+          
+          {/* ปุ่มเปรียบเทียบ */}
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              toggleCompare(String(car.id));
+            }}
+            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm border backdrop-blur-md ${
+              isComparing 
+                ? "bg-blue-500/90 text-white border-blue-400" 
+                : "bg-white/80 text-gray-700 border-gray-200 hover:bg-white"
+            }`}
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
+            {isComparing ? "กำลังเทียบ" : "เปรียบเทียบ"}
+          </button>
         </div>
 
         {/* Overlay Sold Out ทับรูปภาพ */}
