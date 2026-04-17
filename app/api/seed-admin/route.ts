@@ -15,7 +15,9 @@ export async function GET() {
     });
 
     if (existingAdmin) {
-      return NextResponse.json({ message: "พบบัญชีส่วนของ Admin ใน Database นี้อยู่แล้วครับผม!" });
+      return NextResponse.json({
+        message: "พบบัญชีส่วนของ Admin ใน Database นี้อยู่แล้วครับผม!",
+      });
     }
 
     // 3. ทำการ Insert ข้อมูลคนแรกเข้าสู่ตาราง User แสนสะอาดของเรา
@@ -25,15 +27,19 @@ export async function GET() {
         password: hashedPassword, // เราเก็บรหัสที่ผ่านการทุบทำเละแล้วแบบนี้! (ตัวหนังสือแปลกๆ)
         name: "Super Admin",
         role: "ADMIN",
-      }
+      },
     });
 
-    return NextResponse.json({ 
-      message: "🎉 สร้างบัญชีผู้ดูแลระบบ (Admin) คนแรกเข้าฐานข้อมูลเสร็จเรียบร้อยแล้ว!",
-      test_email: newAdmin.email, 
-      test_password: "password123" 
+    return NextResponse.json({
+      message:
+        "🎉 สร้างบัญชีผู้ดูแลระบบ (Admin) คนแรกเข้าฐานข้อมูลเสร็จเรียบร้อยแล้ว!",
+      test_email: newAdmin.email,
+      test_password: "password123",
     });
   } catch (error: any) {
-    return NextResponse.json({ error: "Failed to seed admin", details: error.message }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to seed admin", details: error.message },
+      { status: 500 },
+    );
   }
 }

@@ -7,7 +7,11 @@ export default function DeleteButton({ id }: { id: string }) {
   const [isPending, startTransition] = useTransition();
 
   const handleDelete = () => {
-    if (confirm("คุณแน่ใจหรือไม่ว่าต้องการลบรถคันนี้?\n⚠️ การกระทำนี้ไม่สามารถย้อนกลับได้ รูปภาพประกอบทั้งหมดจะถูกลบทิ้งถาวรด้วย")) {
+    if (
+      confirm(
+        "คุณแน่ใจหรือไม่ว่าต้องการลบรถคันนี้?\n⚠️ การกระทำนี้ไม่สามารถย้อนกลับได้ รูปภาพประกอบทั้งหมดจะถูกลบทิ้งถาวรด้วย",
+      )
+    ) {
       startTransition(async () => {
         try {
           await deleteCar(id);
@@ -19,11 +23,13 @@ export default function DeleteButton({ id }: { id: string }) {
   };
 
   return (
-    <button 
+    <button
       onClick={handleDelete}
       disabled={isPending}
       className={`font-medium text-sm transition-colors ${
-        isPending ? "text-gray-400 cursor-not-allowed" : "text-red-600 hover:text-red-900"
+        isPending
+          ? "text-gray-400 cursor-not-allowed"
+          : "text-red-600 hover:text-red-900"
       }`}
     >
       {isPending ? "กำลังลบ..." : "ลบ"}

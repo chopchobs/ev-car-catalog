@@ -2,14 +2,14 @@
 export default function LogoBar() {
   // สร้าง Array เก็บข้อมูลโลโก้เพื่อให้โค้ดสะอาดขึ้น (Path ตรงตามที่คุณใช้)
   const brandLogos = [
-    { id: 'AUDI', src: '/Logo/AUDi.png' },
-    { id: 'BYD', src: '/Logo/BYD.png' },
-    { id: 'MG', src: '/Logo/MG.png' },
-    { id: 'ORA', src: '/Logo/ORA.png' },
-    { id: 'VOLVO', src: '/Logo/VOLVO.png' },
-    { id: 'CHANGAN', src: '/Logo/CHANGAN.png' },
-    { id: 'NETA', src: '/Logo/NETA.png' },
-    { id: 'TESLA', src: '/Logo/TESLA.png' },
+    { id: "AUDI", src: "/Logo/AUDi.png" },
+    { id: "BYD", src: "/Logo/BYD.png" },
+    { id: "MG", src: "/Logo/MG.png" },
+    { id: "ORA", src: "/Logo/ORA.png" },
+    { id: "VOLVO", src: "/Logo/VOLVO.png" },
+    { id: "CHANGAN", src: "/Logo/CHANGAN.png" },
+    { id: "NETA", src: "/Logo/NETA.png" },
+    { id: "TESLA", src: "/Logo/TESLA.png" },
   ];
 
   return (

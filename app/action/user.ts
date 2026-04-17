@@ -9,19 +9,20 @@ export async function getAdminSession() {
   const token = (await cookies()).get("session")?.value;
   if (!token) return null;
   const session = await verifyToken(token);
-  if (session?.role !== 'ADMIN') return null;
+  if (session?.role !== "ADMIN") return null;
   return session;
 }
- // อัปเดตสิทธิ์ผู้ใช้
+// อัปเดตสิทธิ์ผู้ใช้
 export async function updateUserRole(userId: string, newRole: string) {
   const admin = await getAdminSession();
   if (!admin) return { error: "ไม่มีสิทธิ์เข้าถึง" };
-  if (admin.id === userId) return { error: "ไม่สามารถปรับลดสิทธิ์ของตัวเองได้" };
+  if (admin.id === userId)
+    return { error: "ไม่สามารถปรับลดสิทธิ์ของตัวเองได้" };
 
   try {
     await prisma.user.update({
       where: { id: userId },
-      data: { role: newRole as "USER" | "ADMIN" }
+      data: { role: newRole as "USER" | "ADMIN" },
     });
     return { success: true };
   } catch (err) {
@@ -29,7 +30,7 @@ export async function updateUserRole(userId: string, newRole: string) {
     return { error: "เกิดข้อผิดพลาดในการอัปเดตสิทธิ์" };
   }
 }
- // ลบผู้ใช้
+// ลบผู้ใช้
 export async function deleteUser(userId: string) {
   const admin = await getAdminSession();
   if (!admin) return { error: "ไม่มีสิทธิ์เข้าถึง" };

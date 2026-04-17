@@ -9,7 +9,7 @@ export async function registerUser(formData: FormData) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const confirmPassword = formData.get("confirmPassword") as string;
- // ตรวจสอบว่ากรอกข้อมูลครบถ้วนหรือไม่
+  // ตรวจสอบว่ากรอกข้อมูลครบถ้วนหรือไม่
   if (!name || !email || !password) {
     return { error: "กรุณากรอกข้อมูลให้ครบถ้วน" };
   }
@@ -21,7 +21,7 @@ export async function registerUser(formData: FormData) {
   if (password.length < 6) {
     return { error: "รหัสผ่านต้องมีความยาวอย่างน้อย 6 ตัวอักษร" };
   }
- // 
+  //
   try {
     // เช็คว่าอีเมลนี้ถูกใช้สมัครไปหรือยัง
     const existingUser = await prisma.user.findUnique({
@@ -29,7 +29,9 @@ export async function registerUser(formData: FormData) {
     });
     // ถ้ามีผู้ใช้แล้ว ให้คืนค่า error
     if (existingUser) {
-      return { error: "อีเมลนี้มีผู้ใช้งานแล้ว โปรดใช้อีเมลอื่น หรือเข้าสู่ระบบ" };
+      return {
+        error: "อีเมลนี้มีผู้ใช้งานแล้ว โปรดใช้อีเมลอื่น หรือเข้าสู่ระบบ",
+      };
     }
 
     // ทำการเข้ารหัส Password อย่างระมัดระวัง
@@ -42,8 +44,8 @@ export async function registerUser(formData: FormData) {
         name,
         email,
         password: hashedPassword,
-        // ค่าเริ่มต้นให้ตั้งเป็นแค่ USER ธรรมดาก่อน ห้ามตั้งเป็น ADMIN 
-        role: "USER", 
+        // ค่าเริ่มต้นให้ตั้งเป็นแค่ USER ธรรมดาก่อน ห้ามตั้งเป็น ADMIN
+        role: "USER",
       },
     });
 

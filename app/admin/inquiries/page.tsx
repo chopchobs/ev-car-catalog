@@ -16,18 +16,24 @@ export default async function InquiriesPage() {
   return (
     <div className="max-w-7xl mx-auto pb-12">
       {/* Header section */}
-      <div className="mb-8 bg-white p-6 md:p-10 rounded-[2rem] border border-gray-100 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="mb-8 bg-white p-6 md:p-10 rounded-4xl border border-gray-100 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-black text-gray-900 tracking-tight">ข้อความติดต่อ & นัดหมาย</h1>
+          <h1 className="text-3xl font-black text-gray-900 tracking-tight">
+            ข้อความติดต่อ & นัดหมาย
+          </h1>
           <p className="text-gray-500 font-medium mt-2">
             รายการข้อความจากลูกค้าที่ติดต่อเข้ามาทางหน้าเว็บไซต์
           </p>
         </div>
         <div className="bg-blue-50 px-5 py-3 rounded-xl border border-blue-100 flex items-center gap-3">
           <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-            <span className="text-blue-600 font-bold text-xl">{inquiries.filter((i) => i.status === "UNREAD").length}</span>
+            <span className="text-blue-600 font-bold text-xl">
+              {inquiries.filter((i) => i.status === "UNREAD").length}
+            </span>
           </div>
-          <span className="text-blue-800 font-semibold">ข้อความใหม่ยังไม่ได้อ่าน</span>
+          <span className="text-blue-800 font-semibold">
+            ข้อความใหม่ยังไม่ได้อ่าน
+          </span>
         </div>
       </div>
 
@@ -60,22 +66,28 @@ export default async function InquiriesPage() {
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {inquiries.map((inquiry) => (
-                  <tr 
-                    key={inquiry.id} 
+                  <tr
+                    key={inquiry.id}
                     className={`hover:bg-blue-50/30 transition-colors ${inquiry.status === "UNREAD" ? "bg-amber-50/20" : ""}`}
                   >
                     <td className="px-6 py-5 whitespace-nowrap">
                       <p className="text-sm font-semibold text-gray-900">
-                        {new Date(inquiry.createdAt).toLocaleDateString("th-TH")}
+                        {new Date(inquiry.createdAt).toLocaleDateString(
+                          "th-TH",
+                        )}
                       </p>
                       <p className="text-xs text-gray-500 mt-1 font-medium">
-                        {new Date(inquiry.createdAt).toLocaleTimeString("th-TH")}
+                        {new Date(inquiry.createdAt).toLocaleTimeString(
+                          "th-TH",
+                        )}
                       </p>
                     </td>
-                    
+
                     <td className="px-6 py-5">
                       <div className="flex items-center gap-3 whitespace-nowrap">
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${inquiry.status === "UNREAD" ? "bg-amber-100 text-amber-700" : "bg-gray-100 text-gray-600"}`}>
+                        <div
+                          className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${inquiry.status === "UNREAD" ? "bg-amber-100 text-amber-700" : "bg-gray-100 text-gray-600"}`}
+                        >
                           {inquiry.firstName[0]}
                         </div>
                         <span className="text-sm font-bold text-gray-900">
@@ -86,18 +98,22 @@ export default async function InquiriesPage() {
 
                     <td className="px-6 py-5 whitespace-nowrap">
                       <p className="text-sm font-medium text-gray-600 flex items-center gap-2 mb-1">
-                        <span className="text-gray-400">📧</span> {inquiry.email}
+                        <span className="text-gray-400">📧</span>{" "}
+                        {inquiry.email}
                       </p>
                       {inquiry.phone && (
                         <p className="text-sm font-medium text-gray-600 flex items-center gap-2">
-                          <span className="text-gray-400">📱</span> {inquiry.phone}
+                          <span className="text-gray-400">📱</span>{" "}
+                          {inquiry.phone}
                         </p>
                       )}
                     </td>
 
                     <td className="px-6 py-5 min-w-[300px]">
                       {inquiry.subject && (
-                        <p className="text-sm font-bold text-gray-900 mb-1">เรื่อง: {inquiry.subject}</p>
+                        <p className="text-sm font-bold text-gray-900 mb-1">
+                          เรื่อง: {inquiry.subject}
+                        </p>
                       )}
                       <p className="text-sm text-gray-600 bg-gray-50 p-3 rounded-xl border border-gray-100 mt-2">
                         {inquiry.message}
@@ -118,11 +134,13 @@ export default async function InquiriesPage() {
 
                     <td className="px-6 py-5 text-right whitespace-nowrap">
                       {inquiry.status === "UNREAD" && (
-                        <form action={async () => {
-                          "use server";
-                          await markAsRead(inquiry.id);
-                        }}>
-                          <button 
+                        <form
+                          action={async () => {
+                            "use server";
+                            await markAsRead(inquiry.id);
+                          }}
+                        >
+                          <button
                             type="submit"
                             className="bg-gray-900 hover:bg-cyan-600 text-white font-semibold py-2 px-4 rounded-xl text-xs transition-colors shadow-sm"
                           >
@@ -140,8 +158,12 @@ export default async function InquiriesPage() {
               <div className="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
                 <span className="text-4xl">📭</span>
               </div>
-              <p className="text-xl font-bold text-gray-900 mb-2">ไม่มีความเคลื่อนไหว</p>
-              <p className="text-gray-500">ขณะนี้ยังไม่มีข้อความติดต่อจากลูกค้า</p>
+              <p className="text-xl font-bold text-gray-900 mb-2">
+                ไม่มีความเคลื่อนไหว
+              </p>
+              <p className="text-gray-500">
+                ขณะนี้ยังไม่มีข้อความติดต่อจากลูกค้า
+              </p>
             </div>
           )}
         </div>

@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 
 // 2. Configure Prompt font
 const prompt = Prompt({
-  weight: ['300', '400', '500', '600', '700'],
+  weight: ["300", "400", "500", "600", "700"],
   subsets: ["latin", "thai"],
   variable: "--font-prompt",
   display: "swap",

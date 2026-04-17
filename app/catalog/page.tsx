@@ -10,12 +10,15 @@ import { getSavedCarIds } from "@/app/action/favorite";
 export default async function CatalogPage({
   searchParams,
 }: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const resolvedParams = await searchParams;
-  const search = typeof resolvedParams.search === "string" ? resolvedParams.search : "";
-  const brand = typeof resolvedParams.brand === "string" ? resolvedParams.brand : "ALL";
-  const status = typeof resolvedParams.status === "string" ? resolvedParams.status : "ALL";
+  const search =
+    typeof resolvedParams.search === "string" ? resolvedParams.search : "";
+  const brand =
+    typeof resolvedParams.brand === "string" ? resolvedParams.brand : "ALL";
+  const status =
+    typeof resolvedParams.status === "string" ? resolvedParams.status : "ALL";
   // สร้างเงื่อนไข Prisma แบบ Dynamic
   // ถ้าพารามิเตอร์มาเป็น ALL ให้ข้ามไป (ไม่ใส่เงื่อนไข)
   const whereClause: any = {};
@@ -52,7 +55,7 @@ export default async function CatalogPage({
     getSavedCarIds(),
   ]);
   // สกัดเอาเฉพาะ string ชื่อแบรนด์และเรียงตัวอักษร A-Z
-  const uniqueBrands = distinctBrands.map(item => item.brand).sort();
+  const uniqueBrands = distinctBrands.map((item) => item.brand).sort();
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-950">
@@ -61,9 +64,8 @@ export default async function CatalogPage({
       {/* Hero เล็กๆ สำหรับหน้านี้ */}
       <Hero showSearch={false} />
 
-      <main className="flex-grow py-12">
+      <main className="grow py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
           {/* ส่วนของตัวกรองค้นหา Client Component */}
           <div className="-mt-20 relative z-20">
             <CatalogFilter brands={uniqueBrands} />
@@ -72,7 +74,8 @@ export default async function CatalogPage({
           {/* สรุปจำนวนรถ */}
           <div className="mb-6 flex items-center justify-between">
             <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200">
-              พบรถยนต์ทั้งหมด <span className="text-cyan-600 px-2">{cars.length}</span> คัน
+              พบรถยนต์ทั้งหมด{" "}
+              <span className="text-cyan-600 px-2">{cars.length}</span> คัน
             </h2>
           </div>
 
@@ -80,21 +83,37 @@ export default async function CatalogPage({
           {cars.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
               {cars.map((car) => (
-                <CarCard key={car.id} car={{ ...car, isFavorite: savedCarIds.includes(car.id) }} />
+                <CarCard
+                  key={car.id}
+                  car={{ ...car, isFavorite: savedCarIds.includes(car.id) }}
+                />
               ))}
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-24 bg-white dark:bg-slate-900 rounded-3xl border border-gray-100 dark:border-slate-800 shadow-sm mt-8">
               <div className="w-24 h-24 bg-gray-50 dark:bg-slate-800/50 rounded-full flex items-center justify-center mb-6">
-                <svg className="w-12 h-12 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                <svg
+                  className="w-12 h-12 text-gray-400 dark:text-gray-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">ไม่พบรถยนต์ที่คุณค้นหา</h3>
-              <p className="text-gray-500 dark:text-gray-400 text-lg">ลองเปลี่ยนการตั้งค่าตัวกรอง หรือค้นหาด้วยชื่อรุ่นอื่นดูนะครับ</p>
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                ไม่พบรถยนต์ที่คุณค้นหา
+              </h3>
+              <p className="text-gray-500 dark:text-gray-400 text-lg">
+                ลองเปลี่ยนการตั้งค่าตัวกรอง หรือค้นหาด้วยชื่อรุ่นอื่นดูนะครับ
+              </p>
             </div>
           )}
-
         </div>
       </main>
 

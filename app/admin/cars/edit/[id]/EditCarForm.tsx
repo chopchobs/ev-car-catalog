@@ -26,11 +26,12 @@ export default function EditCarForm({ car }: { car: any }) {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8">
       <form onSubmit={handleSubmit} className="space-y-6">
-        
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {/* ยี่ห้อรถ */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">ยี่ห้อ (Brand)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              ยี่ห้อ (Brand)
+            </label>
             <input
               type="text"
               name="brand"
@@ -43,7 +44,9 @@ export default function EditCarForm({ car }: { car: any }) {
 
           {/* รุ่นรถ */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">รุ่น (Model)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              รุ่น (Model)
+            </label>
             <input
               type="text"
               name="modelName"
@@ -56,7 +59,9 @@ export default function EditCarForm({ car }: { car: any }) {
 
           {/* ปีที่ผลิต */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">ปีที่ผลิต (Year)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              ปีที่ผลิต (Year)
+            </label>
             <input
               type="number"
               name="year"
@@ -70,7 +75,9 @@ export default function EditCarForm({ car }: { car: any }) {
 
           {/* เลขไมล์ */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">เลขไมล์ (กม.)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              เลขไมล์ (กม.)
+            </label>
             <input
               type="number"
               name="mileage"
@@ -83,7 +90,9 @@ export default function EditCarForm({ car }: { car: any }) {
 
           {/* ราคา */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">ราคา (บาท)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              ราคา (บาท)
+            </label>
             <input
               type="number"
               name="price"
@@ -96,7 +105,9 @@ export default function EditCarForm({ car }: { car: any }) {
 
           {/* สถานะ */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">สถานะรถยนต์</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              สถานะรถยนต์
+            </label>
             <select
               name="status"
               defaultValue={car.status}
@@ -121,7 +132,9 @@ export default function EditCarForm({ car }: { car: any }) {
               accept="image/*"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-all bg-white"
             />
-            <p className="text-xs text-gray-500 mt-2">ถ้าไม่ต้องการเปลี่ยน ไม่ต้องอัปโหลดใดๆ</p>
+            <p className="text-xs text-gray-500 mt-2">
+              ถ้าไม่ต้องการเปลี่ยน ไม่ต้องอัปโหลดใดๆ
+            </p>
           </div>
 
           <div>
@@ -135,13 +148,15 @@ export default function EditCarForm({ car }: { car: any }) {
               accept="image/*"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-all bg-white"
             />
-            <p className="text-xs text-gray-500 mt-2">รูปภาพที่เพิ่มใหม่ จะไปต่อท้ายรูปล่าสุดที่มีอยู่แล้ว</p>
+            <p className="text-xs text-gray-500 mt-2">
+              รูปภาพที่เพิ่มใหม่ จะไปต่อท้ายรูปล่าสุดที่มีอยู่แล้ว
+            </p>
           </div>
         </div>
 
         {/* ปุ่ม Action */}
         <div className="flex items-center justify-end gap-4 pt-4 border-t border-gray-100">
-          <Link 
+          <Link
             href="/admin/cars"
             className="px-6 py-2.5 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
           >
@@ -151,13 +166,12 @@ export default function EditCarForm({ car }: { car: any }) {
             type="submit"
             disabled={isLoading}
             className={`px-6 py-2.5 text-sm font-medium text-white rounded-lg transition-all flex items-center gap-2
-              ${isLoading ? 'bg-orange-400 cursor-not-allowed' : 'bg-orange-600 hover:bg-orange-700 shadow-sm hover:shadow-md'}
+              ${isLoading ? "bg-orange-400 cursor-not-allowed" : "bg-orange-600 hover:bg-orange-700 shadow-sm hover:shadow-md"}
             `}
           >
-            {isLoading ? 'กำลังบันทึกข้อมูล...' : 'อัปเดตข้อมูลรถ'}
+            {isLoading ? "กำลังบันทึกข้อมูล..." : "อัปเดตข้อมูลรถ"}
           </button>
         </div>
-
       </form>
     </div>
   );

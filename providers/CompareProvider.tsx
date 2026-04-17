@@ -56,7 +56,9 @@ export function CompareProvider({ children }: { children: React.ReactNode }) {
   const isMaxReached = selectedCarIds.length >= MAX_COMPARE;
 
   return (
-    <CompareContext.Provider value={{ selectedCarIds, toggleCompare, clearCompare, isMaxReached }}>
+    <CompareContext.Provider
+      value={{ selectedCarIds, toggleCompare, clearCompare, isMaxReached }}
+    >
       {children}
     </CompareContext.Provider>
   );

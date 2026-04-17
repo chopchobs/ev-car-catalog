@@ -14,7 +14,10 @@ export async function submitInquiry(formData: FormData) {
     const message = formData.get("message") as string;
 
     if (!firstName || !lastName || !email || !message) {
-      return { error: "กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน (ชื่อ, นามสกุล, อีเมล, ข้อความ)" };
+      return {
+        error:
+          "กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน (ชื่อ, นามสกุล, อีเมล, ข้อความ)",
+      };
     }
 
     await prisma.inquiry.create({
@@ -28,7 +31,11 @@ export async function submitInquiry(formData: FormData) {
       },
     });
 
-    return { success: true, message: "ข้อความของคุณถูกส่งเรียบร้อยแล้ว ทีมงานจะติดต่อกลับโดยเร็วที่สุด ขอบคุณครับ!" };
+    return {
+      success: true,
+      message:
+        "ข้อความของคุณถูกส่งเรียบร้อยแล้ว ทีมงานจะติดต่อกลับโดยเร็วที่สุด ขอบคุณครับ!",
+    };
   } catch (error) {
     console.error("Submit inquiry error:", error);
     return { error: "เกิดข้อผิดพลาดในการส่งข้อความ โปรดลองใหม่อีกครั้ง" };
@@ -63,7 +70,7 @@ export async function markAsRead(id: string) {
       where: { id },
       data: { status: "READ" },
     });
-    
+
     revalidatePath("/admin/inquiries");
     return { success: true };
   } catch (error) {

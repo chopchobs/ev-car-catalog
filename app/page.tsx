@@ -25,10 +25,10 @@ export default async function Home() {
     <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-slate-950">
       <Navbar />
       
-      <main className="flex-grow">
+      <main className="grow">
         {/* 1. Hero Section (Includes Quick Search) */}
         <section className="relative overflow-hidden bg-white dark:bg-slate-900">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50/50 dark:from-slate-900 dark:to-slate-900 -z-10" />
+          <div className="absolute inset-0 bg-linear-to-br from-blue-50 to-indigo-50/50 dark:from-slate-900 dark:to-slate-900 -z-10" />
           <div className="absolute right-0 top-0 -translate-y-12 translate-x-1/3 w-[800px] h-[800px] bg-blue-100/40 dark:bg-blue-900/20 rounded-full blur-3xl -z-10" />
           <Hero />  
         </section>
@@ -51,7 +51,7 @@ export default async function Home() {
                 <span className="inline-block py-1 px-3 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-sm font-medium tracking-wide mb-4 border border-blue-100/50 dark:border-blue-800/50">
                   ✨ FEATURED COLLECTION
                 </span>
-                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-gray-700 to-gray-500 dark:from-white dark:via-slate-200 dark:to-slate-400 tracking-tight mb-3">
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent bg-linear-to-r from-gray-900 via-gray-700 to-gray-500 dark:from-white dark:via-slate-200 dark:to-slate-400 tracking-tight mb-3">
                   รถแนะนำ
                 </h2>
                 <p className="text-lg sm:text-xl text-gray-500 dark:text-slate-400 font-light">
@@ -92,7 +92,7 @@ export default async function Home() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Category 1 */}
               <a href="/catalog?search=SUV" className="group relative h-80 rounded-3xl overflow-hidden cursor-pointer">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-900 to-indigo-900 transition-transform duration-500 group-hover:scale-105"></div>
+                <div className="absolute inset-0 bg-linear-to-br from-blue-900 to-indigo-900 transition-transform duration-500 group-hover:scale-105"></div>
                 <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors"></div>
                 <div className="absolute inset-0 p-8 flex flex-col justify-end">
                   <h3 className="text-2xl font-bold text-white mb-2">Family SUV</h3>
@@ -101,7 +101,7 @@ export default async function Home() {
               </a>
               {/* Category 2 */}
               <a href="/catalog?search=City" className="group relative h-80 rounded-3xl overflow-hidden cursor-pointer">
-                <div className="absolute inset-0 bg-gradient-to-br from-emerald-600 to-teal-800 transition-transform duration-500 group-hover:scale-105"></div>
+                <div className="absolute inset-0 bg-linear-to-br from-emerald-600 to-teal-800 transition-transform duration-500 group-hover:scale-105"></div>
                 <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors"></div>
                 <div className="absolute inset-0 p-8 flex flex-col justify-end">
                   <h3 className="text-2xl font-bold text-white mb-2">City Commuter</h3>
@@ -110,7 +110,7 @@ export default async function Home() {
               </a>
               {/* Category 3 */}
               <a href="/catalog?search=Long+Range" className="group relative h-80 rounded-3xl overflow-hidden cursor-pointer">
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-700 to-pink-800 transition-transform duration-500 group-hover:scale-105"></div>
+                <div className="absolute inset-0 bg-linear-to-br from-purple-700 to-pink-800 transition-transform duration-500 group-hover:scale-105"></div>
                 <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors"></div>
                 <div className="absolute inset-0 p-8 flex flex-col justify-end">
                   <h3 className="text-2xl font-bold text-white mb-2">Long Range</h3>

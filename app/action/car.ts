@@ -17,7 +17,7 @@ export async function addCar(formData: FormData) {
   const year = Number(formData.get("year"));
   const mileage = Number(formData.get("mileage"));
   const price = Number(formData.get("price"));
-  const status = formData.get("status") as 'AVAILABLE' | 'BOOKED' | 'SOLD';
+  const status = formData.get("status") as "AVAILABLE" | "BOOKED" | "SOLD";
 
   // ดึงข้อมูล *ไฟล์* ออกจากฟอร์ม
   const coverImageFile = formData.get("coverImage") as File | null;
@@ -26,12 +26,12 @@ export async function addCar(formData: FormData) {
   // 2. ฟังก์ชันช่วยอัปโหลดไฟล์ไปที่ Supabase Storage
   const uploadImage = async (file: File, folder: string) => {
     if (!file || file.size === 0) return null;
-    
+
     // สร้างชื่อไฟล์ใหม่ให้ไม่มีช่องว่าง หรือชื่อซ้ำ
-    const extension = file.name.split('.').pop();
+    const extension = file.name.split(".").pop();
     const uniqueName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${extension}`;
     const filePath = `${folder}/${uniqueName}`;
-    
+
     // สั่งอัปโหลดไฟล์เข้า Bucket "car-images"
     const { data, error } = await supabase.storage
       .from("car-images")
@@ -42,7 +42,9 @@ export async function addCar(formData: FormData) {
 
     if (error) {
       console.error("Upload error:", error);
-      throw new Error("อัปโหลดรูปภาพไม่สำเร็จ กรุณาตรวจสอบว่าสร้าง Bucket (car-images) เป็น Public แล้ว");
+      throw new Error(
+        "อัปโหลดรูปภาพไม่สำเร็จ กรุณาตรวจสอบว่าสร้าง Bucket (car-images) เป็น Public แล้ว",
+      );
     }
 
     // ดึง Public URL ของไฟล์นั้นออกมา
@@ -64,17 +66,21 @@ export async function addCar(formData: FormData) {
   const uploadedGalleryUrls: string[] = [];
   if (galleryFiles && galleryFiles.length > 0) {
     // กรองเอาเฉพาะไฟล์ที่มีขนาดมากกว่า 0 (คือมีไฟล์เข้ามาจริงๆ)
-    const validFiles = galleryFiles.filter(f => f.size > 0);
-    const uploadPromises = validFiles.map(file => uploadImage(file, "gallery"));
+    const validFiles = galleryFiles.filter((f) => f.size > 0);
+    const uploadPromises = validFiles.map((file) =>
+      uploadImage(file, "gallery"),
+    );
     const results = await Promise.all(uploadPromises);
-    
-    results.forEach(url => {
+
+    results.forEach((url) => {
       if (url) uploadedGalleryUrls.push(url);
     });
   }
 
   // 5. การสร้าง slug อัตโนมัติ
-  const slugText = `${brand}-${modelName}`.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  const slugText = `${brand}-${modelName}`
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-");
   const slug = `${slugText}-${Date.now()}`;
 
   // 6. สั่ง Prisma บันทึกข้อมูลรถ และรูปแกลเลอรีทั้งหมดพร้อมกัน (Nested Write)
@@ -93,8 +99,8 @@ export async function addCar(formData: FormData) {
         create: uploadedGalleryUrls.map((url, index) => ({
           url,
           order: index, // เก็บค่าการจัดเรียงรูปภาพตามตอนที่อัปโหลดมา
-        }))
-      }
+        })),
+      },
     },
   });
 
@@ -108,7 +114,7 @@ export async function deleteCar(id: string) {
   // ดึงข้อมูลรถและรูปรถที่ผูกไว้ เพื่อเอา URL ไปลบออกจาก Supabase Storage
   const car = await prisma.car.findUnique({
     where: { id },
-    include: { gallery: true }
+    include: { gallery: true },
   });
 
   if (!car) {
@@ -123,19 +129,21 @@ export async function deleteCar(id: string) {
   };
 
   const filesToDelete: string[] = [];
-  
+
   if (car.coverImage) {
     const p = getPathFromUrl(car.coverImage);
     if (p) filesToDelete.push(p);
   }
-  
-  car.gallery.forEach(img => {
+
+  car.gallery.forEach((img) => {
     const p = getPathFromUrl(img.url);
     if (p) filesToDelete.push(p);
   });
 
   if (filesToDelete.length > 0) {
-    const { error } = await supabase.storage.from("car-images").remove(filesToDelete);
+    const { error } = await supabase.storage
+      .from("car-images")
+      .remove(filesToDelete);
     if (error) {
       console.error("Failed to delete images from Supabase Storage:", error);
       // ไม่หยุดทำงาน ให้ลบข้อมูลใน DB ต่อเลยเผื่อ Storage ลบไม่ได้จริงๆ จะได้ขยะไม่ค้างในเว็บ
@@ -144,7 +152,7 @@ export async function deleteCar(id: string) {
 
   // ลบรถออกจาก Database (ตาราง gallery จะถูกลบออโต้ ถ้าตั้ง M:N onDelete: Cascade ไว้)
   await prisma.car.delete({
-    where: { id }
+    where: { id },
   });
 
   revalidatePath("/admin/cars");
@@ -157,14 +165,14 @@ export async function updateCar(id: string, formData: FormData) {
   const year = Number(formData.get("year"));
   const mileage = Number(formData.get("mileage"));
   const price = Number(formData.get("price"));
-  const status = formData.get("status") as 'AVAILABLE' | 'BOOKED' | 'SOLD';
+  const status = formData.get("status") as "AVAILABLE" | "BOOKED" | "SOLD";
 
   const coverImageFile = formData.get("coverImage") as File | null;
   const galleryFiles = formData.getAll("gallery") as File[];
 
   const car = await prisma.car.findUnique({
     where: { id },
-    include: { gallery: true }
+    include: { gallery: true },
   });
 
   if (!car) throw new Error("หาข้อมูลรถไม่พบ");
@@ -177,15 +185,19 @@ export async function updateCar(id: string, formData: FormData) {
 
   const uploadImage = async (file: File, folder: string) => {
     if (!file || file.size === 0) return null;
-    const extension = file.name.split('.').pop();
+    const extension = file.name.split(".").pop();
     const uniqueName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${extension}`;
     const filePath = `${folder}/${uniqueName}`;
-    const { error } = await supabase.storage.from("car-images").upload(filePath, file, { cacheControl: "3600", upsert: false });
+    const { error } = await supabase.storage
+      .from("car-images")
+      .upload(filePath, file, { cacheControl: "3600", upsert: false });
     if (error) {
       console.error("Upload error:", error);
       throw new Error("อัปโหลดรูปภาพไม่สำเร็จ");
     }
-    const { data: publicUrlData } = supabase.storage.from("car-images").getPublicUrl(filePath);
+    const { data: publicUrlData } = supabase.storage
+      .from("car-images")
+      .getPublicUrl(filePath);
     return publicUrlData.publicUrl;
   };
 
@@ -204,13 +216,19 @@ export async function updateCar(id: string, formData: FormData) {
   // แกลเลอรี: ในระบบเบื้องต้นจะอัปโหลด "เพิ่ม/ต่อท้าย" ของเดิม (Append)
   const uploadedGalleryUrls: string[] = [];
   if (galleryFiles && galleryFiles.length > 0) {
-    const validFiles = galleryFiles.filter(f => f.size > 0);
-    const uploadPromises = validFiles.map(file => uploadImage(file, "gallery"));
+    const validFiles = galleryFiles.filter((f) => f.size > 0);
+    const uploadPromises = validFiles.map((file) =>
+      uploadImage(file, "gallery"),
+    );
     const results = await Promise.all(uploadPromises);
-    results.forEach(url => { if (url) uploadedGalleryUrls.push(url); });
+    results.forEach((url) => {
+      if (url) uploadedGalleryUrls.push(url);
+    });
   }
 
-  const slugText = `${brand}-${modelName}`.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  const slugText = `${brand}-${modelName}`
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-");
   const slug = `${slugText}-${Date.now()}`;
 
   await prisma.car.update({
@@ -225,13 +243,16 @@ export async function updateCar(id: string, formData: FormData) {
       coverImage: coverImageUrl,
       status,
       // บันทึกลิงก์รูปรอบคันลงในตาราง CarImage อัตโนมัติ โดยให้ order เรียงต่อจากของเดิม
-      gallery: uploadedGalleryUrls.length > 0 ? {
-        create: uploadedGalleryUrls.map((url, index) => ({
-          url,
-          order: car.gallery.length + index,
-        }))
-      } : undefined
-    }
+      gallery:
+        uploadedGalleryUrls.length > 0
+          ? {
+              create: uploadedGalleryUrls.map((url, index) => ({
+                url,
+                order: car.gallery.length + index,
+              })),
+            }
+          : undefined,
+    },
   });
 
   revalidatePath("/admin/cars");

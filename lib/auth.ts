@@ -21,10 +21,10 @@ const getJwtSecretKey = () => {
  */
 export async function signToken(payload: SessionPayload) {
   return new SignJWT({ ...payload })
-    .setProtectedHeader({ alg: "HS256" })  // อัลกอริทึมเข้ารหัส
-    .setIssuedAt()                         // บันทึกเวลาที่สร้าง
-    .setExpirationTime("1d")               // กำหนดให้บัตร (Token) ใบนี้หมดอายุใน 1 วัน
-    .sign(getJwtSecretKey());              // เซ็นรับรองด้วย Secret Key ป้องกันคนปลอมแปลง
+    .setProtectedHeader({ alg: "HS256" }) // อัลกอริทึมเข้ารหัส
+    .setIssuedAt() // บันทึกเวลาที่สร้าง
+    .setExpirationTime("1d") // กำหนดให้บัตร (Token) ใบนี้หมดอายุใน 1 วัน
+    .sign(getJwtSecretKey()); // เซ็นรับรองด้วย Secret Key ป้องกันคนปลอมแปลง
 }
 
 /**

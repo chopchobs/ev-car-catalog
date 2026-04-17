@@ -17,8 +17,8 @@ export async function updateProfile(formData: FormData) {
   const name = formData.get("name") as string;
   const currentPassword = formData.get("currentPassword") as string;
   const newPassword = formData.get("newPassword") as string;
-  const confirmNewPassword = formData.get("confirmNewPassword") as string
-  // ตรวจสอบว่ากรอกชื่อหรือไม่ 
+  const confirmNewPassword = formData.get("confirmNewPassword") as string;
+  // ตรวจสอบว่ากรอกชื่อหรือไม่
   if (!name || !name.trim()) {
     return { error: "กรุณาระบุชื่อของคุณด้วยครับ" };
   }
@@ -28,20 +28,26 @@ export async function updateProfile(formData: FormData) {
     const userInDb = await prisma.user.findUnique({
       where: { id: userSession.id },
     });
-  
+
     if (!userInDb) return { error: "ไม่พบบัญชีผู้ใช้งานในระบบ" };
     // สร้างตัวแปร updateData เพื่อเก็บข้อมูลที่จะอัปเดต
     const updateData: any = { name: name.trim() };
 
     // กรณีที่ 2: ถ้าผู้ใช้กรอกข้อมูลรหัสผ่านมาด้วย (แสดงว่าต้องการเปลี่ยนรหัสผ่าน)
     if (newPassword || currentPassword) {
-      if (!currentPassword) return { error: "กรุณากรอก 'รหัสผ่านปัจจุบัน' เพื่อยืนยันตัวตนว่าคุณเป็นเจ้าของบัญชีจริง" };
-      
+      if (!currentPassword)
+        return {
+          error:
+            "กรุณากรอก 'รหัสผ่านปัจจุบัน' เพื่อยืนยันตัวตนว่าคุณเป็นเจ้าของบัญชีจริง",
+        };
+
       const isMatch = await bcrypt.compare(currentPassword, userInDb.password);
       if (!isMatch) return { error: "รหัสผ่านปัจจุบันไม่ถูกต้อง โปรดลองใหม่" };
 
-      if (newPassword !== confirmNewPassword) return { error: "รหัสผ่านใหม่และการยืนยันรหัสผ่านไม่ตรงกัน" };
-      if (newPassword.length < 6) return { error: "รหัสผ่านใหม่ต้องมีความยาว 6 ตัวอักษรขึ้นไป" };
+      if (newPassword !== confirmNewPassword)
+        return { error: "รหัสผ่านใหม่และการยืนยันรหัสผ่านไม่ตรงกัน" };
+      if (newPassword.length < 6)
+        return { error: "รหัสผ่านใหม่ต้องมีความยาว 6 ตัวอักษรขึ้นไป" };
 
       const salt = await bcrypt.genSalt(10);
       updateData.password = await bcrypt.hash(newPassword, salt);
@@ -51,11 +57,14 @@ export async function updateProfile(formData: FormData) {
       where: { id: userSession.id },
       data: updateData,
     });
-    
-    // สั่งให้ Next.js รีโหลด Navbar และหน้าต่างๆ ใหม่ เพื่อดึงชื่อใหม่แสดงผล
-    revalidatePath("/", "layout"); 
 
-    return { success: true, message: "อัปเดตข้อมูลส่วนตัวเสร็จสมบูรณ์เรียบร้อยแล้ว!" };
+    // สั่งให้ Next.js รีโหลด Navbar และหน้าต่างๆ ใหม่ เพื่อดึงชื่อใหม่แสดงผล
+    revalidatePath("/", "layout");
+
+    return {
+      success: true,
+      message: "อัปเดตข้อมูลส่วนตัวเสร็จสมบูรณ์เรียบร้อยแล้ว!",
+    };
   } catch (error) {
     console.error(error);
     return { error: "เกิดข้อผิดพลาดในการเชื่อมต่อฐานข้อมูล โปรดลองใหม่" };

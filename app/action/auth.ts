@@ -34,12 +34,13 @@ export async function loginUser(formData: FormData) {
       name: user.name, // พกชื่อใส่การ์ดไปด้วย
     });
     // 5. บันทึกตั๋ว (Token) ฝังลงไปใน Cookie แบบลับ
-    (await cookies()).set("session", token, { // เปลี่ยนชื่อจาก admin_session เป็น session กลาง
-      httpOnly: true,     
+    (await cookies()).set("session", token, {
+      // เปลี่ยนชื่อจาก admin_session เป็น session กลาง
+      httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: 60 * 60 * 24,
-      path: "/",          
+      path: "/",
     });
 
     return { success: true, role: user.role };
