@@ -55,7 +55,7 @@ export default async function CatalogPage({
   const uniqueBrands = distinctBrands.map(item => item.brand).sort();
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-950">
       <Navbar />
 
       {/* Hero เล็กๆ สำหรับหน้านี้ */}
@@ -71,7 +71,7 @@ export default async function CatalogPage({
 
           {/* สรุปจำนวนรถ */}
           <div className="mb-6 flex items-center justify-between">
-            <h2 className="text-xl font-bold text-gray-800">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200">
               พบรถยนต์ทั้งหมด <span className="text-cyan-600 px-2">{cars.length}</span> คัน
             </h2>
           </div>
@@ -84,14 +84,14 @@ export default async function CatalogPage({
               ))}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center py-24 bg-white rounded-3xl border border-gray-100 shadow-sm mt-8">
-              <div className="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mb-6">
-                <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="flex flex-col items-center justify-center py-24 bg-white dark:bg-slate-900 rounded-3xl border border-gray-100 dark:border-slate-800 shadow-sm mt-8">
+              <div className="w-24 h-24 bg-gray-50 dark:bg-slate-800/50 rounded-full flex items-center justify-center mb-6">
+                <svg className="w-12 h-12 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">ไม่พบรถยนต์ที่คุณค้นหา</h3>
-              <p className="text-gray-500 text-lg">ลองเปลี่ยนการตั้งค่าตัวกรอง หรือค้นหาด้วยชื่อรุ่นอื่นดูนะครับ</p>
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">ไม่พบรถยนต์ที่คุณค้นหา</h3>
+              <p className="text-gray-500 dark:text-gray-400 text-lg">ลองเปลี่ยนการตั้งค่าตัวกรอง หรือค้นหาด้วยชื่อรุ่นอื่นดูนะครับ</p>
             </div>
           )}
 

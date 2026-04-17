@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Prompt } from "next/font/google"; // 1. Import Promp
 import "./globals.css";
 import { CompareProvider } from "@/providers/CompareProvider";
 import CompareFloatingBar from "@/components/ui/CompareFloatingBar";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,12 +37,15 @@ export default function RootLayout({
     <html
       lang="th"
       className={`${geistSans.variable} ${geistMono.variable} ${prompt.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col font-sans">
-        <CompareProvider>
-          {children}
-          <CompareFloatingBar />
-        </CompareProvider>
+      <body className="min-h-full flex flex-col font-sans transition-colors duration-300 dark:bg-gray-950 dark:text-gray-100 bg-white text-gray-900">
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <CompareProvider>
+            {children}
+            <CompareFloatingBar />
+          </CompareProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

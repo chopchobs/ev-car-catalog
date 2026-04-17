@@ -61,10 +61,10 @@ export default function CarCard({ car }: { car: Car }) {
   };
 
   return (
-    <div className="group bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl hover:border-cyan-200 transition-all duration-300 hover:-translate-y-1 flex flex-col">
+    <div className="group bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl hover:border-cyan-200 dark:hover:border-cyan-800 transition-all duration-300 hover:-translate-y-1 flex flex-col">
       
       {/* ---------------- รูปภาพ (Carousel) ---------------- */}
-      <div className="relative aspect-[4/3] w-full bg-gray-50 overflow-hidden group/gallery">
+      <div className="relative aspect-[4/3] w-full bg-gray-50 dark:bg-slate-800/50 overflow-hidden group/gallery">
         {/* ปุ่ม Favorite มุมซ้ายบน */}
         <FavoriteButton carId={String(car.id)} initialIsFavorite={car.isFavorite} />
         {hasImages ? (
@@ -150,22 +150,22 @@ export default function CarCard({ car }: { car: Car }) {
         
         {/* ยี่ห้อ และ รุ่น */}
         <div className="mb-3">
-          <p className="text-xs font-bold text-cyan-600 uppercase tracking-wider mb-1">{car.brand}</p>
-          <h3 className="text-lg font-bold text-gray-900 line-clamp-1 group-hover:text-cyan-700 transition-colors">
+          <p className="text-xs font-bold text-cyan-600 dark:text-cyan-400 uppercase tracking-wider mb-1">{car.brand}</p>
+          <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 line-clamp-1 group-hover:text-cyan-700 dark:group-hover:text-cyan-400 transition-colors">
             {car.modelName}
           </h3>
         </div>
 
         {/* สเปค (ปี และ ไมล์) */}
-        <div className="flex items-center gap-3 text-sm text-gray-500 mb-5 font-medium">
-          <div className="flex items-center gap-1.5 bg-gray-50 px-2.5 py-1 rounded-md">
-            <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="flex items-center gap-3 text-sm text-gray-500 dark:text-slate-400 mb-5 font-medium">
+          <div className="flex items-center gap-1.5 bg-gray-50 dark:bg-slate-800 px-2.5 py-1 rounded-md">
+            <svg className="w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
             {car.year}
           </div>
-          <div className="flex items-center gap-1.5 bg-gray-50 px-2.5 py-1 rounded-md">
-            <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="flex items-center gap-1.5 bg-gray-50 dark:bg-slate-800 px-2.5 py-1 rounded-md">
+            <svg className="w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
             {formattedMileage} กม.
@@ -173,17 +173,17 @@ export default function CarCard({ car }: { car: Car }) {
         </div>
 
         {/* ราคา และ ปุ่มกด */}
-        <div className="mt-auto pt-4 border-t border-gray-100 flex flex-col gap-3">
+        <div className="mt-auto pt-4 border-t border-gray-100 dark:border-slate-800 flex flex-col gap-3">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs text-gray-400 mb-0.5 font-medium">ราคา</p>
-              <p className="text-xl font-bold text-gray-900">
+              <p className="text-xs text-gray-400 dark:text-slate-500 mb-0.5 font-medium">ราคา</p>
+              <p className="text-xl font-bold text-gray-900 dark:text-white">
                 ฿{formattedPrice}
               </p>
             </div>
             <Link 
               href={`/cars/${car.id}`} 
-              className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-xl hover:bg-cyan-600 hover:shadow-md hover:shadow-cyan-500/20 transition-all active:scale-95"
+              className="px-4 py-2 bg-gray-900 dark:bg-slate-100 text-white dark:text-slate-900 text-sm font-medium rounded-xl hover:bg-cyan-600 dark:hover:bg-cyan-500 hover:shadow-md hover:shadow-cyan-500/20 dark:hover:shadow-cyan-400/20 transition-all active:scale-95"
             >
               ดูสเปคเต็ม
             </Link>
@@ -194,7 +194,7 @@ export default function CarCard({ car }: { car: Car }) {
             href="https://line.me/ti/p/~@evauto"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full py-2 bg-cyan-50/70 hover:bg-cyan-100 text-cyan-700 text-sm font-semibold rounded-xl border border-cyan-100 transition-all active:scale-95"
+            className="flex items-center justify-center gap-2 w-full py-2 bg-cyan-50/70 dark:bg-cyan-900/30 hover:bg-cyan-100 dark:hover:bg-cyan-900/50 text-cyan-700 dark:text-cyan-300 text-sm font-semibold rounded-xl border border-cyan-100 dark:border-cyan-800 transition-all active:scale-95"
           >
             <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg">
               <path d="M24 10.304c0-5.369-5.383-9.738-12-9.738-6.616 0-12 4.369-12 9.738 0 4.814 4.269 8.846 10.038 9.608.391.084.922.258 1.057.592.101.254.033.649 0 .899l-.159.948c-.049.297-.241 1.157 1.011.636 1.252-.52 6.777-3.992 9.38-6.945C23.235 14.155 24 12.333 24 10.304z" />

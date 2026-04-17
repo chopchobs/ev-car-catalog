@@ -8,8 +8,9 @@ export default async function ComparePage({
 }: {
   searchParams: { ids?: string };
 }) {
+  // รับค่า ids จาก searchParams
   const { ids } = await searchParams;
-  
+  // ถ้าไม่มี ids ให้แสดงข้อความว่าไม่มีรถที่เลือกเปรียบเทียบ
   if (!ids) {
     return (
       <div className="min-h-screen bg-neutral-50 flex flex-col">
@@ -24,9 +25,9 @@ export default async function ComparePage({
       </div>
     );
   }
-
+  // แยกค่า ids ออกเป็น array และจำกัดแค่ 3 คัน
   const carIdsArray = ids.split(",").slice(0, 3); // จำกัดแค่ 3 คัน
-
+  // ดึงข้อมูลรถจาก database
   const cars = await prisma.car.findMany({
     where: {
       id: { in: carIdsArray }
