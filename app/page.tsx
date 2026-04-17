@@ -22,21 +22,21 @@ export default async function Home() {
   });
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-slate-950">
       <Navbar />
       
       <main className="flex-grow">
         {/* 1. Hero Section (Includes Quick Search) */}
-        <section className="relative overflow-hidden bg-white">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50/50 -z-10" />
-          <div className="absolute right-0 top-0 -translate-y-12 translate-x-1/3 w-[800px] h-[800px] bg-blue-100/40 rounded-full blur-3xl -z-10" />
+        <section className="relative overflow-hidden bg-white dark:bg-slate-900">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50/50 dark:from-slate-900 dark:to-slate-900 -z-10" />
+          <div className="absolute right-0 top-0 -translate-y-12 translate-x-1/3 w-[800px] h-[800px] bg-blue-100/40 dark:bg-blue-900/20 rounded-full blur-3xl -z-10" />
           <Hero />  
         </section>
 
         {/* 2. Trusted Brands Section */}
-        <section className="py-10 bg-white border-b border-gray-100">
+        <section className="py-10 bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <p className="text-sm font-medium text-gray-400 tracking-wider uppercase mb-6">
+            <p className="text-sm font-medium text-gray-400 dark:text-slate-500 tracking-wider uppercase mb-6">
               แบรนด์ชั้นนำที่ลูกค้าไว้วางใจ
             </p>
             <LogoBar />
@@ -44,21 +44,21 @@ export default async function Home() {
         </section>
 
         {/* 3. Featured Cars Section */}
-        <section id="featured-cars" className="py-24 bg-gray-50">
+        <section id="featured-cars" className="py-24 bg-gray-50 dark:bg-slate-950/50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-end mb-12">
               <div className="max-w-2xl">
-                <span className="inline-block py-1 px-3 rounded-full bg-blue-50 text-blue-600 text-sm font-medium tracking-wide mb-4 border border-blue-100/50">
+                <span className="inline-block py-1 px-3 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-sm font-medium tracking-wide mb-4 border border-blue-100/50 dark:border-blue-800/50">
                   ✨ FEATURED COLLECTION
                 </span>
-                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-gray-700 to-gray-500 tracking-tight mb-3">
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-gray-700 to-gray-500 dark:from-white dark:via-slate-200 dark:to-slate-400 tracking-tight mb-3">
                   รถแนะนำ
                 </h2>
-                <p className="text-lg sm:text-xl text-gray-500 font-light">
+                <p className="text-lg sm:text-xl text-gray-500 dark:text-slate-400 font-light">
                   EV Cars คุณภาพดีพร้อมส่งมอบ คัดสรรมาเพื่อคุณโดยเฉพาะ
                 </p>
               </div>
-              <a href="/catalog" className="hidden sm:flex items-center space-x-2 text-gray-500 font-medium hover:text-gray-900 transition-colors duration-200 group pb-2">
+              <a href="/catalog" className="hidden sm:flex items-center space-x-2 text-gray-500 dark:text-slate-400 font-medium hover:text-gray-900 dark:hover:text-white transition-colors duration-200 group pb-2">
                 <span>ดูทั้งหมด</span>
                 <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -73,7 +73,7 @@ export default async function Home() {
             </div>
             
             <div className="mt-10 text-center sm:hidden">
-              <a href="/catalog" className="inline-flex items-center space-x-2 text-gray-600 font-medium hover:text-gray-900 bg-white px-6 py-3 rounded-xl shadow-sm border border-gray-100">
+              <a href="/catalog" className="inline-flex items-center space-x-2 text-gray-600 dark:text-slate-300 font-medium hover:text-gray-900 dark:hover:text-white bg-white dark:bg-slate-800 px-6 py-3 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700">
                 <span>ดูรถทั้งหมด</span>
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
               </a>
@@ -82,11 +82,11 @@ export default async function Home() {
         </section>
 
         {/* 4. Browse by Lifestyle */}
-        <section className="py-24 bg-white">
+        <section className="py-24 bg-white dark:bg-slate-900">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 tracking-tight">เลือกรถตามไลฟ์สไตล์</h2>
-              <p className="text-lg text-gray-500 font-light">ค้นหารถที่ตอบโจทย์การใช้ชีวิตของคุณ</p>
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4 tracking-tight">เลือกรถตามไลฟ์สไตล์</h2>
+              <p className="text-lg text-gray-500 dark:text-slate-400 font-light">ค้นหารถที่ตอบโจทย์การใช้ชีวิตของคุณ</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -122,12 +122,12 @@ export default async function Home() {
         </section>
         
         {/* 5. Why Choose Us (Premium Features) */}
-        <section className="bg-gray-900 py-24 text-white relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-600/20 rounded-full blur-[120px] pointer-events-none"></div>
+        <section className="bg-gray-900 dark:bg-slate-950 py-24 text-white relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-600/20 dark:bg-blue-600/10 rounded-full blur-[120px] pointer-events-none"></div>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="text-center mb-16">
               <h2 className="text-3xl sm:text-4xl font-bold mb-4 tracking-tight">ทำไมต้องซื้อ EV กับเรา?</h2>
-              <p className="text-lg text-gray-400 font-light">เรามอบความมั่นใจสูงสุดด้วยมาตรฐานและบริการหลังการขาย</p>
+              <p className="text-lg text-gray-400 dark:text-slate-400 font-light">เรามอบความมั่นใจสูงสุดด้วยมาตรฐานและบริการหลังการขาย</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
@@ -137,8 +137,8 @@ export default async function Home() {
                 { icon: "📉", title: "ดอกเบี้ยพิเศษ", desc: "เริ่มต้นเพียง 1.XX% ต่อปี" },
                 { icon: "👨‍🔧", title: "ศูนย์บริการ EV", desc: "ช่างผู้เชี่ยวชาญดูแลตลอดการใช้งาน" }
               ].map((feature, i) => (
-                <div key={i} className="bg-gray-800/50 backdrop-blur border border-gray-700/50 rounded-3xl p-8 hover:bg-gray-800 transition-colors duration-300">
-                  <div className="w-16 h-16 bg-gray-700/50 rounded-2xl flex items-center justify-center mx-auto mb-6 text-3xl">
+                <div key={i} className="bg-gray-800/50 dark:bg-slate-900/50 backdrop-blur border border-gray-700/50 dark:border-slate-800/50 rounded-3xl p-8 hover:bg-gray-800 dark:hover:bg-slate-900 transition-colors duration-300">
+                  <div className="w-16 h-16 bg-gray-700/50 dark:bg-slate-800/50 rounded-2xl flex items-center justify-center mx-auto mb-6 text-3xl">
                     {feature.icon}
                   </div>
                   <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
@@ -150,11 +150,11 @@ export default async function Home() {
         </section>
 
         {/* 6. Testimonials */}
-        <section className="py-24 bg-gray-50">
+        <section className="py-24 bg-gray-50 dark:bg-slate-900">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 tracking-tight">ความประทับใจจากลูกค้า</h2>
-              <p className="text-lg text-gray-500 font-light">เสียงตอบรับจากผู้ใช้จริงที่ออกรถกับเรา</p>
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4 tracking-tight">ความประทับใจจากลูกค้า</h2>
+              <p className="text-lg text-gray-500 dark:text-slate-400 font-light">เสียงตอบรับจากผู้ใช้จริงที่ออกรถกับเรา</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -163,16 +163,16 @@ export default async function Home() {
                 { name: "คุณรวิสรา", car: "BYD Atto 3", quote: "ตัดสินใจไม่ผิดเลยค่ะ มีทีมงานอธิบายเรื่องการชาร์จให้ฟังอย่างละเอียด น้องเซลล์น่ารักมาก" },
                 { name: "คุณกฤษฎา", car: "MG EP", quote: "ได้ดอกเบี้ยถูกกว่าที่อื่น แถม Wallbox ให้ด้วย จบครบในที่เดียว แนะนำเลยครับ" }
               ].map((review, i) => (
-                <div key={i} className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 relative">
+                <div key={i} className="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-700 relative">
                   <div className="text-yellow-400 text-xl mb-4">★★★★★</div>
-                  <p className="text-gray-700 font-light leading-relaxed mb-6">"{review.quote}"</p>
+                  <p className="text-gray-700 dark:text-slate-300 font-light leading-relaxed mb-6">"{review.quote}"</p>
                   <div className="flex items-center">
-                    <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 font-bold">
+                    <div className="w-12 h-12 bg-gray-200 dark:bg-slate-700 rounded-full flex items-center justify-center text-gray-500 dark:text-slate-300 font-bold">
                       {review.name[3]}
                     </div>
                     <div className="ml-4">
-                      <p className="text-sm font-bold text-gray-900">{review.name}</p>
-                      <p className="text-xs text-gray-500">ออกรถ {review.car}</p>
+                      <p className="text-sm font-bold text-gray-900 dark:text-white">{review.name}</p>
+                      <p className="text-xs text-gray-500 dark:text-slate-400">ออกรถ {review.car}</p>
                     </div>
                   </div>
                 </div>
@@ -182,7 +182,7 @@ export default async function Home() {
         </section>
 
         {/* 7. CTA / Line Registration */}
-        <section className="py-20 bg-blue-600 relative overflow-hidden">
+        <section className="py-20 bg-blue-600 dark:bg-blue-900 relative overflow-hidden">
           {/* Decorative circles */}
           <div className="absolute top-[-100px] left-[-100px] w-80 h-80 bg-blue-500 rounded-full blur-3xl opacity-50"></div>
           <div className="absolute bottom-[-100px] right-[-100px] w-96 h-96 bg-indigo-500 rounded-full blur-3xl opacity-50"></div>
