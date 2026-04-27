@@ -9,9 +9,9 @@ import { createClient } from "@supabase/supabase-js";
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseKey);
-
+// add
 export async function addCar(formData: FormData) {
-  // 1. ดึงข้อมูลตัวอักษรจากฟอร์ม
+  // 1. ดึงข้อมูลตัวอักษรจากฟอร์ม ( Input )
   const brand = formData.get("brand") as string;
   const modelName = formData.get("modelName") as string;
   const year = Number(formData.get("year"));
@@ -19,20 +19,20 @@ export async function addCar(formData: FormData) {
   const price = Number(formData.get("price"));
   const status = formData.get("status") as "AVAILABLE" | "BOOKED" | "SOLD";
 
-  // ดึงข้อมูล *ไฟล์* ออกจากฟอร์ม
+  // Process - 1. ดึงข้อมูล *ไฟล์* ออกจากฟอร์ม
   const coverImageFile = formData.get("coverImage") as File | null;
   const galleryFiles = formData.getAll("gallery") as File[];
 
-  // 2. ฟังก์ชันช่วยอัปโหลดไฟล์ไปที่ Supabase Storage
+  // 2. ฟังก์ชันช่วย uploadImage อัปโหลดไฟล์ไปที่ Supabase Storage
   const uploadImage = async (file: File, folder: string) => {
     if (!file || file.size === 0) return null;
 
-    // สร้างชื่อไฟล์ใหม่ให้ไม่มีช่องว่าง หรือชื่อซ้ำ
+    // 2.1สร้างชื่อไฟล์ใหม่ให้ไม่มีช่องว่าง หรือชื่อซ้ำ
     const extension = file.name.split(".").pop();
     const uniqueName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${extension}`;
     const filePath = `${folder}/${uniqueName}`;
 
-    // สั่งอัปโหลดไฟล์เข้า Bucket "car-images"
+    // 2.2 สั่งอัปโหลดไฟล์เข้า Bucket "car-images"
     const { data, error } = await supabase.storage
       .from("car-images")
       .upload(filePath, file, {
@@ -47,7 +47,7 @@ export async function addCar(formData: FormData) {
       );
     }
 
-    // ดึง Public URL ของไฟล์นั้นออกมา
+    // 2.3 ดึง Public URL ของไฟล์นั้นออกมา
     const { data: publicUrlData } = supabase.storage
       .from("car-images")
       .getPublicUrl(filePath);
@@ -109,7 +109,7 @@ export async function addCar(formData: FormData) {
   revalidatePath("/");
   redirect("/admin/cars");
 }
-
+// delete
 export async function deleteCar(id: string) {
   // ดึงข้อมูลรถและรูปรถที่ผูกไว้ เพื่อเอา URL ไปลบออกจาก Supabase Storage
   const car = await prisma.car.findUnique({
@@ -158,7 +158,7 @@ export async function deleteCar(id: string) {
   revalidatePath("/admin/cars");
   revalidatePath("/");
 }
-
+// update
 export async function updateCar(id: string, formData: FormData) {
   const brand = formData.get("brand") as string;
   const modelName = formData.get("modelName") as string;
