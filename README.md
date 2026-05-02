@@ -1,5 +1,33 @@
 # ⚡ EV Car Catalog & Admin Dashboard
 
+<div align="center">
+  <img width="800" alt="Hero Image" src="https://github.com/user-attachments/assets/08822099-3032-43a1-b171-da4cb6673cd2" />
+  <p><em>A modern, high-performance catalog and management system for Electric Vehicles.</em></p>
+</div>
+
+---
+
+## 📸 System Screenshots
+
+### 🚗 Public Client (User-Facing)
+The storefront features a modern, responsive UI designed for optimal user experience and fast loading times.
+
+| Catalog / Filter | Car Details | Car Comparison |
+| :---: | :---: | :---: |
+| <img width="400" alt="Client 1" src="https://github.com/user-attachments/assets/41dd9e55-7ade-4249-b8b8-14f7339187c7" /> | <img width="400" alt="Client 2" src="https://github.com/user-attachments/assets/2996d6b7-7508-4adb-a133-84d8abe24da5" /> | <img width="400" alt="Client 3" src="https://github.com/user-attachments/assets/e8947b2e-ab4a-4a79-9867-8557126a38ba" /> |
+
+### 🔒 Admin Dashboard (CMS)
+A secure, RBAC-protected management portal to handle EV data, specifications, and media assets with Supabase Storage integration.
+
+| Dashboard Overview | Data Table |
+| :---: | :---: |
+| <img width="500" alt="Dashboard 1" src="https://github.com/user-attachments/assets/f8a9fa21-d5c1-46a6-b3e2-3bb474cb142a" /> | <img width="500" alt="Dashboard 2" src="https://github.com/user-attachments/assets/1c6c4eca-99d6-497e-9969-94e23afad651" /> |
+
+| Add / Edit Entry | Media Upload Handling |
+| :---: | :---: |
+| <img width="500" alt="Dashboard 3" src="https://github.com/user-attachments/assets/96508415-7916-4c64-8d55-db076d7d01ff" /> | <img width="500" alt="Dashboard 4" src="https://github.com/user-attachments/assets/345a4143-3d96-430d-abff-29af0cc1ea97" /> |
+
+
 > A robust, production-ready full-stack catalog and management system for Electric Vehicles, built with performance, security, and clean architecture in mind.
 
 ## 🚀 Tech Stack
