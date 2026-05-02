@@ -19,14 +19,13 @@ The storefront features a modern, responsive UI designed for optimal user experi
 ### 🔒 Admin Dashboard (CMS)
 A secure, RBAC-protected management portal to handle EV data, specifications, and media assets with Supabase Storage integration.
 
-| Dashboard Overview | Data Table |
+| Dashboard Overview | User & Role Management |
 | :---: | :---: |
-| <img width="500" alt="Dashboard 1" src="https://github.com/user-attachments/assets/f8a9fa21-d5c1-46a6-b3e2-3bb474cb142a" /> | <img width="500" alt="Dashboard 2" src="https://github.com/user-attachments/assets/1c6c4eca-99d6-497e-9969-94e23afad651" /> |
+| <img width="500" alt="Dashboard 1" src="https://github.com/user-attachments/assets/345a4143-3d96-430d-abff-29af0cc1ea97" /> | <img width="500" alt="Dashboard 2" src="https://github.com/user-attachments/assets/1c6c4eca-99d6-497e-9969-94e23afad651" /> |
 
-| Add / Edit Entry | Media Upload Handling |
+| Add / Edit Entry Form |  Customer Inquiries |
 | :---: | :---: |
-| <img width="500" alt="Dashboard 3" src="https://github.com/user-attachments/assets/96508415-7916-4c64-8d55-db076d7d01ff" /> | <img width="500" alt="Dashboard 4" src="https://github.com/user-attachments/assets/345a4143-3d96-430d-abff-29af0cc1ea97" /> |
-
+| <img width="500" alt="Dashboard 3" src="https://github.com/user-attachments/assets/96508415-7916-4c64-8d55-db076d7d01ff" /> | <img width="500" alt="Dashboard 4" src="https://github.com/user-attachments/assets/1428396e-7392-4889-b1b6-dc7992104b86" /> |
 
 > A robust, production-ready full-stack catalog and management system for Electric Vehicles, built with performance, security, and clean architecture in mind.
 
