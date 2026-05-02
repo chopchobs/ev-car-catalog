@@ -3,72 +3,108 @@
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { createClient } from "@supabase/supabase-js";
+import {
+  uploadCarImage,
+  deleteCarImage,
+  deleteCarImages,
+} from "@/lib/supabase-storage";
+import { cookies } from "next/headers";
+import { verifyToken } from "@/lib/auth";
+import { z } from "zod";
 
-// สร้าง Supabase Client สำหรับอัปโหลดรูปด้วย ANON KEY
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
-// add
+const carFormSchema = z.object({
+  brand: z.string().min(1, "กรุณาระบุแบรนด์"),
+  modelName: z.string().min(1, "กรุณาระบุรุ่น"),
+  year: z.coerce.number().positive("ปีต้องเป็นตัวเลขบวก"),
+  mileage: z.coerce.number().nonnegative("ระยะทางต้องไม่ติดลบ"),
+  price: z.coerce.number().positive("ราคาต้องมากกว่า 0"),
+  status: z.enum(["AVAILABLE", "BOOKED", "SOLD"], {
+    message: "สถานะไม่ถูกต้อง",
+  }),
+});
+
+// Add new car
 export async function addCar(formData: FormData) {
-  // 1. ดึงข้อมูลตัวอักษรจากฟอร์ม ( Input )
-  const brand = formData.get("brand") as string;
-  const modelName = formData.get("modelName") as string;
-  const year = Number(formData.get("year"));
-  const mileage = Number(formData.get("mileage"));
-  const price = Number(formData.get("price"));
-  const status = formData.get("status") as "AVAILABLE" | "BOOKED" | "SOLD";
+  // Authentication & RBAC Check
+  const cookieStore = await cookies();
+  const token = cookieStore.get("session")?.value;
+  const session = token ? await verifyToken(token) : null;
+  if (!session || session.role !== "ADMIN") {
+    return { success: false, message: "Unauthorized" };
+  }
 
-  // Process - 1. ดึงข้อมูล *ไฟล์* ออกจากฟอร์ม
+  // Zod Validation
+  const parsed = carFormSchema.safeParse({
+    brand: formData.get("brand"),
+    modelName: formData.get("modelName"),
+    year: formData.get("year"),
+    mileage: formData.get("mileage"),
+    price: formData.get("price"),
+    status: formData.get("status"),
+  });
+
+  if (!parsed.success) {
+    return {
+      success: false,
+      message: "ข้อมูลไม่ถูกต้อง",
+      errors: parsed.error.flatten(),
+    };
+  }
+
+  const { brand, modelName, year, mileage, price, status } = parsed.data;
+
+  // ดึงข้อมูล *ไฟล์* ออกจากฟอร์ม
   const coverImageFile = formData.get("coverImage") as File | null;
   const galleryFiles = formData.getAll("gallery") as File[];
 
-  // 2. ฟังก์ชันช่วย uploadImage อัปโหลดไฟล์ไปที่ Supabase Storage
-  const uploadImage = async (file: File, folder: string) => {
-    if (!file || file.size === 0) return null;
-
-    // 2.1สร้างชื่อไฟล์ใหม่ให้ไม่มีช่องว่าง หรือชื่อซ้ำ
-    const extension = file.name.split(".").pop();
-    const uniqueName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${extension}`;
-    const filePath = `${folder}/${uniqueName}`;
-
-    // 2.2 สั่งอัปโหลดไฟล์เข้า Bucket "car-images"
-    const { data, error } = await supabase.storage
-      .from("car-images")
-      .upload(filePath, file, {
-        cacheControl: "3600",
-        upsert: false,
-      });
-
-    if (error) {
-      console.error("Upload error:", error);
-      throw new Error(
-        "อัปโหลดรูปภาพไม่สำเร็จ กรุณาตรวจสอบว่าสร้าง Bucket (car-images) เป็น Public แล้ว",
-      );
+  // File Upload Validation [coverImageFile, galleryFiles] (Security)
+  if (coverImageFile && coverImageFile.size > 0) {
+    if (!coverImageFile.type.startsWith("image/")) {
+      return {
+        success: false,
+        message: "กรุณาเลือกไฟล์รูปภาพสำหรับหน้าปก",
+      };
     }
+    if (coverImageFile.size > 5 * 1024 * 1024) {
+      return {
+        success: false,
+        message: "ไฟล์รูปปกต้องมีขนาดไม่เกิน 5MB",
+      };
+    }
+  }
 
-    // 2.3 ดึง Public URL ของไฟล์นั้นออกมา
-    const { data: publicUrlData } = supabase.storage
-      .from("car-images")
-      .getPublicUrl(filePath);
+  if (galleryFiles && galleryFiles.length > 0) {
+    for (const file of galleryFiles) {
+      if (file.size > 0) {
+        if (!file.type.startsWith("image/")) {
+          return {
+            success: false,
+            message: "ไฟล์ในแกลเลอรีต้องเป็นรูปภาพเท่านั้น",
+          };
+        }
+        if (file.size > 5 * 1024 * 1024) {
+          return {
+            success: false,
+            message: "รูปภาพแกลเลอรีแต่ละรูปต้องมีขนาดไม่เกิน 5MB",
+          };
+        }
+      }
+    }
+  }
 
-    return publicUrlData.publicUrl;
-  };
-
-  // 3. อัปโหลดรูปปก (Cover Image)
+  // อัปโหลดรูปปก (Cover Image)
   let coverImageUrl = "";
   if (coverImageFile && coverImageFile.size > 0) {
-    const uploadedUrl = await uploadImage(coverImageFile, "covers");
+    const uploadedUrl = await uploadCarImage(coverImageFile, "covers");
     if (uploadedUrl) coverImageUrl = uploadedUrl;
   }
 
-  // 4. อัปโหลดรูปแกลเลอรี (Gallery) แบบ Upload พร้อมกันหลายรูปให้ประหยัดเวลา
+  // อัปโหลดรูปแกลเลอรี (Gallery)
   const uploadedGalleryUrls: string[] = [];
   if (galleryFiles && galleryFiles.length > 0) {
-    // กรองเอาเฉพาะไฟล์ที่มีขนาดมากกว่า 0 (คือมีไฟล์เข้ามาจริงๆ)
     const validFiles = galleryFiles.filter((f) => f.size > 0);
     const uploadPromises = validFiles.map((file) =>
-      uploadImage(file, "gallery"),
+      uploadCarImage(file, "gallery"),
     );
     const results = await Promise.all(uploadPromises);
 
@@ -77,40 +113,63 @@ export async function addCar(formData: FormData) {
     });
   }
 
-  // 5. การสร้าง slug อัตโนมัติ
-  const slugText = `${brand}-${modelName}`
+  // URL Slug (SEO Friendly)
+  const slug = `${brand}-${modelName}`
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-");
-  const slug = `${slugText}-${Date.now()}`;
 
-  // 6. สั่ง Prisma บันทึกข้อมูลรถ และรูปแกลเลอรีทั้งหมดพร้อมกัน (Nested Write)
-  await prisma.car.create({
-    data: {
-      slug,
-      brand,
-      modelName,
-      year,
-      mileage,
-      price,
-      coverImage: coverImageUrl,
-      status,
-      // บันทึกลิงก์รูปรอบคันลงในตาราง CarImage อัตโนมัติ (1-to-Many)
-      gallery: {
-        create: uploadedGalleryUrls.map((url, index) => ({
-          url,
-          order: index, // เก็บค่าการจัดเรียงรูปภาพตามตอนที่อัปโหลดมา
-        })),
+  // Rollback Mechanism
+  try {
+    // บันทึกข้อมูลรถ และรูปแกลเลอรี
+    await prisma.car.create({
+      data: {
+        slug,
+        brand,
+        modelName,
+        year,
+        mileage,
+        price,
+        coverImage: coverImageUrl,
+        status,
+        // บันทึกรูปรอบคันลงในตาราง CarImage อัตโนมัติ
+        gallery: {
+          create: uploadedGalleryUrls.map((url, index) => ({
+            url,
+            order: index, // เก็บค่าการจัดเรียงรูปภาพตามตอนที่อัปโหลดมา
+          })),
+        },
       },
-    },
-  });
+    });
+  } catch (error) {
+    console.error("Database Error:", error);
 
-  // 7. ล้างแคชหน้าต่างๆ เพื่อให้แสดงข้อมูลใหม่ทันที
+    // Rollback uploaded files
+    if (coverImageUrl) await deleteCarImage(coverImageUrl);
+    if (uploadedGalleryUrls.length > 0)
+      await deleteCarImages(uploadedGalleryUrls);
+
+    return {
+      success: false,
+      message: "เกิดข้อผิดพลาดในการบันทึกข้อมูล กรุณาลองใหม่อีกครั้ง",
+    };
+  }
+
+  // ล้างแคชหน้าต่างๆ เพื่อให้แสดงข้อมูลใหม่ทันที
   revalidatePath("/admin/cars");
   revalidatePath("/");
   redirect("/admin/cars");
 }
-// delete
+
+// Delete Car
 export async function deleteCar(id: string) {
+  // Authentication & RBAC Check
+  const cookieStore = await cookies();
+  const token = cookieStore.get("session")?.value;
+  const session = token ? await verifyToken(token) : null;
+  if (!session || session.role !== "ADMIN") {
+    return { success: false, message: "Unauthorized" };
+  }
+
   // ดึงข้อมูลรถและรูปรถที่ผูกไว้ เพื่อเอา URL ไปลบออกจาก Supabase Storage
   const car = await prisma.car.findUnique({
     where: { id },
@@ -118,142 +177,175 @@ export async function deleteCar(id: string) {
   });
 
   if (!car) {
-    throw new Error("หาข้อมูลรถไม่พบ");
+    return { success: false, message: "หาข้อมูลรถไม่พบ" };
   }
 
-  // ดึงชื่อไฟล์จาก URL (หลังคำว่า car-images/)
-  const getPathFromUrl = (url: string) => {
-    if (!url) return null;
-    const parts = url.split("car-images/");
-    return parts.length > 1 ? parts[1] : null;
-  };
+  try {
+    // ลบรถออกจาก Database
+    await prisma.car.delete({
+      where: { id },
+    });
 
-  const filesToDelete: string[] = [];
-
-  if (car.coverImage) {
-    const p = getPathFromUrl(car.coverImage);
-    if (p) filesToDelete.push(p);
-  }
-
-  car.gallery.forEach((img) => {
-    const p = getPathFromUrl(img.url);
-    if (p) filesToDelete.push(p);
-  });
-
-  if (filesToDelete.length > 0) {
-    const { error } = await supabase.storage
-      .from("car-images")
-      .remove(filesToDelete);
-    if (error) {
-      console.error("Failed to delete images from Supabase Storage:", error);
-      // ไม่หยุดทำงาน ให้ลบข้อมูลใน DB ต่อเลยเผื่อ Storage ลบไม่ได้จริงๆ จะได้ขยะไม่ค้างในเว็บ
+    // ถ้าลบใน DB สำเร็จ ค่อยลบรูปภาพ เพื่อป้องกันการเกิด Orphan Records ถ้า DB มีปัญหา
+    if (car.coverImage) {
+      await deleteCarImage(car.coverImage);
     }
+    if (car.gallery.length > 0) {
+      await deleteCarImages(car.gallery.map((img) => img.url));
+    }
+  } catch (error) {
+    console.error("Delete Error:", error);
+    return { success: false, message: "ลบข้อมูลไม่สำเร็จ" };
   }
-
-  // ลบรถออกจาก Database (ตาราง gallery จะถูกลบออโต้ ถ้าตั้ง M:N onDelete: Cascade ไว้)
-  await prisma.car.delete({
-    where: { id },
-  });
 
   revalidatePath("/admin/cars");
   revalidatePath("/");
+  redirect("/admin/cars");
 }
-// update
+
+// Update Car
 export async function updateCar(id: string, formData: FormData) {
-  const brand = formData.get("brand") as string;
-  const modelName = formData.get("modelName") as string;
-  const year = Number(formData.get("year"));
-  const mileage = Number(formData.get("mileage"));
-  const price = Number(formData.get("price"));
-  const status = formData.get("status") as "AVAILABLE" | "BOOKED" | "SOLD";
+  // Authentication & RBAC Check
+  const cookieStore = await cookies();
+  const token = cookieStore.get("session")?.value;
+  const session = token ? await verifyToken(token) : null;
+  if (!session || session.role !== "ADMIN") {
+    return { success: false, message: "Unauthorized" };
+  }
+
+  // Zod Validation
+  const parsed = carFormSchema.safeParse({
+    brand: formData.get("brand"),
+    modelName: formData.get("modelName"),
+    year: formData.get("year"),
+    mileage: formData.get("mileage"),
+    price: formData.get("price"),
+    status: formData.get("status"),
+  });
+
+  if (!parsed.success) {
+    return {
+      success: false,
+      message: "ข้อมูลไม่ถูกต้อง",
+      errors: parsed.error.flatten(),
+    };
+  }
+
+  const { brand, modelName, year, mileage, price, status } = parsed.data;
 
   const coverImageFile = formData.get("coverImage") as File | null;
   const galleryFiles = formData.getAll("gallery") as File[];
+
+  // File Upload Validation [coverImageFile, galleryFiles] (Security)
+  if (coverImageFile && coverImageFile.size > 0) {
+    if (!coverImageFile.type.startsWith("image/")) {
+      return {
+        success: false,
+        message: "กรุณาเลือกไฟล์รูปภาพสำหรับหน้าปก",
+      };
+    }
+    if (coverImageFile.size > 5 * 1024 * 1024) {
+      return {
+        success: false,
+        message: "ไฟล์รูปปกต้องมีขนาดไม่เกิน 5MB",
+      };
+    }
+  }
+
+  if (galleryFiles && galleryFiles.length > 0) {
+    for (const file of galleryFiles) {
+      if (file.size > 0) {
+        if (!file.type.startsWith("image/")) {
+          return {
+            success: false,
+            message: "ไฟล์ในแกลเลอรีต้องเป็นรูปภาพเท่านั้น",
+          };
+        }
+        if (file.size > 5 * 1024 * 1024) {
+          return {
+            success: false,
+            message: "รูปภาพแกลเลอรีแต่ละรูปต้องมีขนาดไม่เกิน 5MB",
+          };
+        }
+      }
+    }
+  }
 
   const car = await prisma.car.findUnique({
     where: { id },
     include: { gallery: true },
   });
 
-  if (!car) throw new Error("หาข้อมูลรถไม่พบ");
-
-  const getPathFromUrl = (url: string) => {
-    if (!url) return null;
-    const parts = url.split("car-images/");
-    return parts.length > 1 ? parts[1] : null;
-  };
-
-  const uploadImage = async (file: File, folder: string) => {
-    if (!file || file.size === 0) return null;
-    const extension = file.name.split(".").pop();
-    const uniqueName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${extension}`;
-    const filePath = `${folder}/${uniqueName}`;
-    const { error } = await supabase.storage
-      .from("car-images")
-      .upload(filePath, file, { cacheControl: "3600", upsert: false });
-    if (error) {
-      console.error("Upload error:", error);
-      throw new Error("อัปโหลดรูปภาพไม่สำเร็จ");
-    }
-    const { data: publicUrlData } = supabase.storage
-      .from("car-images")
-      .getPublicUrl(filePath);
-    return publicUrlData.publicUrl;
-  };
+  if (!car) return { success: false, message: "หาข้อมูลรถไม่พบ" };
 
   let coverImageUrl = car.coverImage;
+  let newlyUploadedCoverUrl: string | null = null;
 
-  // ถ้ามีการอัปโหลด Cover Image รูปใหม่เข้ามา ลบของเก่าทิ้งและอัปโหลดอันใหม่แทน
+  // ถ้ามีการอัปโหลด Cover Image รูปใหม่เข้ามา อัปโหลดก่อน
   if (coverImageFile && coverImageFile.size > 0) {
-    if (car.coverImage) {
-      const oldPath = getPathFromUrl(car.coverImage);
-      if (oldPath) await supabase.storage.from("car-images").remove([oldPath]);
+    const uploadedUrl = await uploadCarImage(coverImageFile, "covers");
+    if (uploadedUrl) {
+      coverImageUrl = uploadedUrl;
+      newlyUploadedCoverUrl = uploadedUrl;
     }
-    const uploadedUrl = await uploadImage(coverImageFile, "covers");
-    if (uploadedUrl) coverImageUrl = uploadedUrl;
   }
 
   // แกลเลอรี: ในระบบเบื้องต้นจะอัปโหลด "เพิ่ม/ต่อท้าย" ของเดิม (Append)
-  const uploadedGalleryUrls: string[] = [];
+  const newlyUploadedGalleryUrls: string[] = [];
   if (galleryFiles && galleryFiles.length > 0) {
     const validFiles = galleryFiles.filter((f) => f.size > 0);
     const uploadPromises = validFiles.map((file) =>
-      uploadImage(file, "gallery"),
+      uploadCarImage(file, "gallery"),
     );
     const results = await Promise.all(uploadPromises);
     results.forEach((url) => {
-      if (url) uploadedGalleryUrls.push(url);
+      if (url) newlyUploadedGalleryUrls.push(url);
     });
   }
 
-  const slugText = `${brand}-${modelName}`
+  const slug = `${brand}-${modelName}`
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-");
-  const slug = `${slugText}-${Date.now()}`;
 
-  await prisma.car.update({
-    where: { id },
-    data: {
-      slug,
-      brand,
-      modelName,
-      year,
-      mileage,
-      price,
-      coverImage: coverImageUrl,
-      status,
-      // บันทึกลิงก์รูปรอบคันลงในตาราง CarImage อัตโนมัติ โดยให้ order เรียงต่อจากของเดิม
-      gallery:
-        uploadedGalleryUrls.length > 0
-          ? {
-              create: uploadedGalleryUrls.map((url, index) => ({
-                url,
-                order: car.gallery.length + index,
-              })),
-            }
-          : undefined,
-    },
-  });
+  // Rollback Mechanism
+  try {
+    await prisma.car.update({
+      where: { id },
+      data: {
+        slug,
+        brand,
+        modelName,
+        year,
+        mileage,
+        price,
+        coverImage: coverImageUrl,
+        status,
+        gallery:
+          newlyUploadedGalleryUrls.length > 0
+            ? {
+                create: newlyUploadedGalleryUrls.map((url, index) => ({
+                  url,
+                  order: car.gallery.length + index,
+                })),
+              }
+            : undefined,
+      },
+    });
+
+    // ลบรูปหน้าปกเก่าทิ้ง ถ้ามีการอัปโหลดใหม่และบันทึกลง DB สำเร็จแล้ว
+    if (newlyUploadedCoverUrl && car.coverImage) {
+      await deleteCarImage(car.coverImage);
+    }
+  } catch (error) {
+    console.error("Update Database Error:", error);
+
+    // Rollback newly uploaded images
+    if (newlyUploadedCoverUrl) await deleteCarImage(newlyUploadedCoverUrl);
+    if (newlyUploadedGalleryUrls.length > 0)
+      await deleteCarImages(newlyUploadedGalleryUrls);
+
+    return { success: false, message: "เกิดข้อผิดพลาดในการอัปเดตข้อมูล" };
+  }
 
   revalidatePath("/admin/cars");
   revalidatePath(`/cars/${id}`);
