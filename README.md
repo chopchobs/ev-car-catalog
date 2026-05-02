@@ -1,85 +1,89 @@
-# EV Car Catalog 🚗⚡
+# ⚡ EV Car Catalog & Admin Dashboard
 
-A modern, full-stack web application designed for browsing, managing, and bookmarking electric vehicles. Built with performance and user experience in mind, this project serves as a showcase of modern web development using the latest Next.js features and server-side technologies.
+> A robust, production-ready full-stack catalog and management system for Electric Vehicles, built with performance, security, and clean architecture in mind.
 
-## 🌟 Key Features
+## 🚀 Tech Stack
 
-- **Car Catalog & Discovery:** Browse a comprehensive list of EV cars with detailed specifications, galleries, and statuses (Available, Booked, Sold).
-- **User Authentication & Authorization:** Secure JWT-based authentication supporting multiple roles (Admin & User).
-- **Favorites System:** Authenticated users can save their favorite cars to their personal collection.
-- **Inquiry System:** Built-in contact form allowing users to directly inquire about specific cars.
-- **Admin Dashboard Foundation:** Underlying schema robustly supports backend administration for managing car inventory, viewing inquiries, and user management.
-- **Modern UI/UX:** Fully responsive design built with Tailwind CSS v4 and dark/light mode support.
+- **Framework:** [Next.js](https://nextjs.org/) (App Router, Server Actions)
+- **Database ORM:** [Prisma](https://www.prisma.io/)
+- **Database & Storage:** [Supabase](https://supabase.com/) (PostgreSQL + Object Storage)
+- **Validation:** [Zod](https://zod.dev/)
+- **Styling:** Tailwind CSS
+- **Containerization:** Docker (Multi-stage build)
 
-## 🛠️ Tech Stack
+## 🌟 Key Features & Production-Ready Highlights
 
-**Frontend:**
-- [Next.js 16](https://nextjs.org/) (App Router & Server Actions)
-- [React 19](https://react.dev/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Tailwind CSS v4](https://tailwindcss.com/)
-- [next-themes](https://github.com/pacocoursey/next-themes) (Dark mode)
+During the development of this project, significant emphasis was placed on writing clean, secure, and resilient code suitable for enterprise environments.
 
-**Backend & Database:**
-- [Prisma ORM](https://www.prisma.io/)
-- PostgreSQL (Hosted on [Supabase](https://supabase.com/))
-- **Authentication:** Custom JWT-based (`jose` & `bcryptjs`)
-- `server-only` to strictly enforce secure server-side execution
+### 🔐 Security & RBAC (Role-Based Access Control)
+- **Secure Mutations:** Every server action (Create, Update, Delete) enforces strict session-based Admin verification before execution.
+- **Protected Routes & Actions:** Unauthorized access attempts are actively rejected at the server level, ensuring no data can be manipulated without the `ADMIN` role.
 
-## 🚀 Getting Started
+### 🛡️ Data Integrity & Validation
+- **Strict Input Validation:** Utilizes **Zod** to validate all incoming form data on the server side. Ensures that numerical values (price, mileage, year) are positive and strings are properly formatted before hitting the database.
+- **File Validation:** Dedicated validation logic checks file sizes (max 5MB) and MIME types (`image/*`) to prevent malicious uploads.
 
-Follow these instructions to set up the project locally.
+### 🏗️ Clean Architecture
+- **Separation of Concerns:** Business logic is clearly decoupled. Database mutations live in dedicated controller files, while external storage interactions are abstracted away into focused service layers (e.g., `lib/supabase-storage.ts`).
 
-### Prerequisites
-- Node.js 20+
-- npm, yarn, pnpm, or bun
-- A PostgreSQL database (e.g., Supabase, Neon, or local Postgres)
+### ⚙️ Fail-Safe Mechanisms & Transactions
+- **Orphaned-File Rollback:** Implemented comprehensive `try/catch` blocks. If a Prisma database transaction fails during car creation or update, any newly uploaded images to Supabase are automatically rolled back (deleted) to prevent storage bloat and orphaned files.
+- **Safe Deletion Sequence:** When deleting a record, the database entry is removed *first*. Only upon success are the associated images deleted from Supabase, guaranteeing data consistency.
 
-### Installation
+### 🔍 SEO & Robust File Naming
+- **Collision-Proof Uploads:** Image uploads are renamed using `crypto.randomUUID()` to prevent naming collisions and security risks in the storage bucket.
+- **Dynamic SEO Slugs:** Generates clean, human-readable, and SEO-friendly URL slugs automatically from the car's brand and model (e.g., `tesla-model-3`).
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/yourusername/ev-car-catalog.git
-   cd ev-car-catalog
-   ```
+### 🐳 Containerization & Deployment
+- **Optimized Multi-Stage Builds:** The Docker environment utilizes a multi-stage architecture to aggressively reduce final image sizes by isolating build dependencies from runtime assets via the Next.js `standalone` output mode.
+- **Secure Execution Environment:** Engineered to execute the runtime server using a dedicated non-root user (`nextjs:nodejs`), conforming to best security practices and minimizing vulnerability surfaces in production.
 
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
+## 🗄️ Database Schema
 
-3. **Set up environment variables:**
-   Create a `.env` file in the root of your project and add the necessary variables:
-   ```env
-   # Database connection
-   DATABASE_URL="postgresql://user:password@host:port/dbname"
-   
-   # JWT Configuration
-   JWT_SECRET="your_super_secret_jwt_key"
-   ```
+The relational database is structured to support scalability and complex querying:
 
-4. **Initialize the database:**
-   Run Prisma migrations to set up your database schema structure.
-   ```bash
-   npx prisma migrate dev --name init
-   npx prisma generate
-   ```
+- **`User`**: Manages accounts with defined roles (`USER` or `ADMIN`).
+- **`Car`**: The core entity storing EV details, pricing, and status (`AVAILABLE`, `BOOKED`, `SOLD`).
+- **`CarImage`**: A related table (1-to-N) storing gallery images with explicit ordering.
+- **`SavedCar`**: A join table allowing Users to save/favorite specific Cars (N-to-M relationship).
+- **`Inquiry`**: Stores customer contact requests and appointment inquiries.
 
-5. **Start the development server:**
-   ```bash
-   npm run dev
-   ```
-   Open [http://localhost:3000](http://localhost:3000) with your browser to see the application.
+## 🛠️ Getting Started
 
-## 🗄️ Database Schema Overview
+Follow these steps to run the project locally.
 
-The database is designed with the following core entities:
-- **User:** Manages authentication and roles (`ADMIN` / `USER`).
-- **Car:** Stores EV details, features, price, mileage, and availability status.
-- **CarImage:** Handles multiple gallery images for each car entity.
-- **SavedCar:** Manages the relation for users bookmarking their favorite cars.
-- **Inquiry:** Collects user questions and contact requests.
+### 1. Clone the repository
+```bash
+git clone https://github.com/yourusername/ev-car-catalog.git
+cd ev-car-catalog
+```
 
----
+### 2. Install dependencies
+```bash
+npm install
+```
 
-> **Note:** This project is actively developed and maintained as part of my professional portfolio. Feel free to explore the codebase to see my coding practices!
+### 3. Environment Variables
+Create a `.env` file in the root directory and add the following keys:
+```env
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+# Prisma (PostgreSQL)
+DATABASE_URL=your_database_connection_string
+```
+
+### 4. Database Setup
+Generate the Prisma Client and push the schema to your database:
+```bash
+npx prisma generate
+npx prisma db push
+```
+
+### 5. Run the development server
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
