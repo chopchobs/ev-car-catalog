@@ -1,6 +1,7 @@
 import Link from "next/link";
 import prisma from "@/lib/prisma"; // ดึง prisma แบบ default export ตามไฟล์ที่คุณตั้งค่าไว้
 import DeleteButton from "./components/DeleteButton";
+import { Car } from "@prisma/client";
 
 export default async function AdminCarsPage() {
   // 1. ดึงข้อมูลรถทั้งหมดจาก Database เรียงจากใหม่ไปเก่า
@@ -85,7 +86,7 @@ export default async function AdminCarsPage() {
                 </tr>
               ) : (
                 /* วนลูปแสดงข้อมูลรถ */
-                cars.map((car) => (
+                cars.map((car: Car) => (
                   <tr
                     key={car.id}
                     className="hover:bg-gray-50 transition-colors"
