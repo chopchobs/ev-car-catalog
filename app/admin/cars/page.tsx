@@ -5,9 +5,9 @@ import { Car } from "@prisma/client";
 
 export default async function AdminCarsPage() {
   // 1. ดึงข้อมูลรถทั้งหมดจาก Database เรียงจากใหม่ไปเก่า
-  const cars = await prisma.car.findMany({
+  const cars = (await prisma.car.findMany({
     orderBy: { createdAt: "desc" },
-  });
+  })) as Car[];
 
   return (
     <div className="space-y-6">
