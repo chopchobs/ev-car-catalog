@@ -191,7 +191,7 @@ export async function deleteCar(id: string) {
       await deleteCarImage(car.coverImage);
     }
     if (car.gallery.length > 0) {
-      await deleteCarImages(car.gallery.map((img) => img.url));
+      await deleteCarImages(car.gallery.map((img: { url: string }) => img.url));
     }
   } catch (error) {
     console.error("Delete Error:", error);
