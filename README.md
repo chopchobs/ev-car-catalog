@@ -9,7 +9,6 @@
 
 ## 🚀 Live Demo & Links
 - **Frontend (Vercel):** [Click to Visit](https://ev-car-catalog.vercel.app/)
-- **Backend API (Render):** [API Documentation](https://my-ecommerce-api-p5zj.onrender.com)
 
 ## 📸 System Screenshots
 ### 🚗 Public Client (User-Facing)
