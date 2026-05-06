@@ -92,7 +92,7 @@ export default async function ComparePage({
                         ฿{new Intl.NumberFormat("th-TH").format(car.price)}
                       </p>
                       <Link
-                        href={`/cars/${car.id}`}
+                        href={`/cars/${car.slug}`}
                         className="block w-full text-center py-2.5 px-4 bg-gray-900 hover:bg-blue-600 text-white text-sm font-semibold rounded-xl transition-colors"
                       >
                         ดูรายละเอียด

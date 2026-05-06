@@ -1,4 +1,4 @@
-"use server"; // <-- คำสั่งศักดิ์สิทธิ์ บังคับรันบน Server เท่านั้น!
+"use server";
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
@@ -114,9 +114,19 @@ export async function addCar(formData: FormData) {
   }
 
   // URL Slug (SEO Friendly)
-  const slug = `${brand}-${modelName}`
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-");
+  let slug = `${brand}-${modelName}`.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+
+  let existingCar = await prisma.car.findUnique({ where: { slug } });
+  let counter = 1;
+  while (existingCar) {
+    const newSlug = `${slug}-${counter}`;
+    existingCar = await prisma.car.findUnique({ where: { slug: newSlug } });
+    if (!existingCar) {
+      slug = newSlug;
+      break;
+    }
+    counter++;
+  }
 
   // Rollback Mechanism
   try {
@@ -303,9 +313,21 @@ export async function updateCar(id: string, formData: FormData) {
     });
   }
 
-  const slug = `${brand}-${modelName}`
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-");
+  let slug = `${brand}-${modelName}`.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+
+  let existingCarUpdate = await prisma.car.findUnique({ where: { slug } });
+  let counterUpdate = 1;
+  while (existingCarUpdate && existingCarUpdate.id !== id) {
+    const newSlug = `${slug}-${counterUpdate}`;
+    existingCarUpdate = await prisma.car.findUnique({
+      where: { slug: newSlug },
+    });
+    if (!existingCarUpdate || existingCarUpdate.id === id) {
+      slug = newSlug;
+      break;
+    }
+    counterUpdate++;
+  }
 
   // Rollback Mechanism
   try {
@@ -348,7 +370,8 @@ export async function updateCar(id: string, formData: FormData) {
   }
 
   revalidatePath("/admin/cars");
-  revalidatePath(`/cars/${id}`);
+  revalidatePath(`/cars/${car.slug}`);
+  revalidatePath(`/cars/${slug}`);
   revalidatePath("/");
   redirect("/admin/cars");
 }

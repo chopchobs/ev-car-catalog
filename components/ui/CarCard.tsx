@@ -8,6 +8,7 @@ import { useCompare } from "@/providers/CompareProvider";
 // กำหนด Type ให้ตรงกับข้อมูลที่ดึงมาจาก Prisma
 interface Car {
   id: string | number;
+  slug: string;
   brand: string;
   modelName: string;
   year: number;
@@ -269,7 +270,7 @@ export default function CarCard({ car }: { car: Car }) {
               </p>
             </div>
             <Link
-              href={`/cars/${car.id}`}
+              href={`/cars/${car.slug}`}
               className="px-4 py-2 bg-gray-900 dark:bg-slate-100 text-white dark:text-slate-900 text-sm font-medium rounded-xl hover:bg-cyan-600 dark:hover:bg-cyan-500 hover:shadow-md hover:shadow-cyan-500/20 dark:hover:shadow-cyan-400/20 transition-all active:scale-95"
             >
               ดูสเปคเต็ม
