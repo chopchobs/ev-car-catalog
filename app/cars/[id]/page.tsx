@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
 import ImageGallery from "@/components/ui/ImageGallery";
@@ -7,6 +8,48 @@ import Footer from "@/components/layout/Footer";
 import FavoriteButton from "@/components/ui/FavoriteButton";
 import { getSavedCarIds } from "@/app/action/favorite";
 import TestDriveModal from "@/components/ui/TestDriveModal";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
+  const { id } = await params;
+
+  const car = await prisma.car.findUnique({
+    where: { id },
+    select: {
+      brand: true,
+      modelName: true,
+      price: true,
+      year: true,
+      mileage: true,
+      coverImage: true,
+    },
+  });
+
+  if (!car) {
+    return {
+      title: "Car not found | EVo Auto Drive",
+    };
+  }
+
+  const formattedPrice = new Intl.NumberFormat("th-TH").format(car.price);
+  const formattedMileage = new Intl.NumberFormat("th-TH").format(car.mileage);
+
+  const title = `${car.brand} ${car.modelName} - Price ${formattedPrice} THB | EVo Auto Drive`;
+  const description = `Electric car year ${car.year}, mileage ${formattedMileage} km. Ready for delivery. Click for more details!`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: car.coverImage ? [car.coverImage] : [],
+    },
+  };
+}
 
 export default async function CarDetailPage({
   params,
