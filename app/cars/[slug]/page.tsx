@@ -12,12 +12,12 @@ import TestDriveModal from "@/components/ui/TestDriveModal";
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string };
+  params: { slug: string };
 }): Promise<Metadata> {
-  const { id } = await params;
+  const { slug } = await params;
 
   const car = await prisma.car.findUnique({
-    where: { id },
+    where: { slug },
     select: {
       brand: true,
       modelName: true,
@@ -54,12 +54,12 @@ export async function generateMetadata({
 export default async function CarDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: { slug: string };
 }) {
-  const { id } = await params;
+  const { slug } = await params;
   const [car, savedCarIds] = await Promise.all([
     prisma.car.findUnique({
-      where: { id },
+      where: { slug },
       include: { gallery: { orderBy: { order: "asc" } } },
     }),
     getSavedCarIds(),
