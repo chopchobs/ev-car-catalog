@@ -4,6 +4,7 @@ import "./globals.css";
 import { CompareProvider } from "@/providers/CompareProvider";
 import CompareFloatingBar from "@/components/ui/CompareFloatingBar";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,6 +46,7 @@ export default function RootLayout({
             {children}
             <CompareFloatingBar />
           </CompareProvider>
+          <Toaster richColors position="top-center" theme="system" />
         </ThemeProvider>
       </body>
     </html>

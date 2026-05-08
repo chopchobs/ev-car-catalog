@@ -167,7 +167,7 @@ export async function addCar(formData: FormData) {
   // ล้างแคชหน้าต่างๆ เพื่อให้แสดงข้อมูลใหม่ทันที
   revalidatePath("/admin/cars");
   revalidatePath("/");
-  redirect("/admin/cars");
+  return { success: true };
 }
 
 // Delete Car
@@ -210,7 +210,7 @@ export async function deleteCar(id: string) {
 
   revalidatePath("/admin/cars");
   revalidatePath("/");
-  redirect("/admin/cars");
+  return { success: true };
 }
 
 // Update Car
@@ -373,5 +373,5 @@ export async function updateCar(id: string, formData: FormData) {
   revalidatePath(`/cars/${car.slug}`);
   revalidatePath(`/cars/${slug}`);
   revalidatePath("/");
-  redirect("/admin/cars");
+  return { success: true };
 }
