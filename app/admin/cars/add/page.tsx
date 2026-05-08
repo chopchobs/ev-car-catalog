@@ -3,9 +3,12 @@
 import { useState } from "react";
 import Link from "next/link";
 import { addCar } from "@/app/action/car"; // Server Action มาใช้งาน
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function AdminCarsAddPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   // ฟังก์ชันนี้จะทำงานตอนเรากดปุ่ม "บันทึกข้อมูล"
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -17,12 +20,26 @@ export default function AdminCarsAddPage() {
       const formData = new FormData(e.currentTarget);
 
       // ส่งข้อมูลไปให้ Server Action จัดการ (บันทึกลง DB)
-      await addCar(formData);
-
-      // หมายเหตุ: ไม่ต้องเขียน router.push() เพราะใน addCar มีคำสั่ง redirect แล้ว
+      const result = await addCar(formData);
+      
+      if (result?.success) {
+        toast.success("บันทึกข้อมูลสำเร็จเรียบร้อยแล้ว", {
+          description: "ระบบได้ทำการบันทึกข้อมูลรถยนต์เข้าสู่ฐานข้อมูลแล้ว",
+        });
+        e.currentTarget.reset(); // Reset ฟอร์ม
+        
+        setTimeout(() => {
+          router.push("/admin/cars");
+          router.refresh();
+        }, 1500);
+      } else {
+        throw new Error(result?.message || "บันทึกข้อมูลไม่สำเร็จ");
+      }
     } catch (error) {
       console.error("เกิดข้อผิดพลาด:", error);
-      alert("บันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
+      toast.error("บันทึกข้อมูลไม่สำเร็จ", {
+        description: "กรุณาตรวจสอบความถูกต้องของข้อมูลแล้วลองใหม่อีกครั้ง",
+      });
       setIsLoading(false);
     }
   };

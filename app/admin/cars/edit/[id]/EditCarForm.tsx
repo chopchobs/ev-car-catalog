@@ -3,10 +3,13 @@
 import { useState } from "react";
 import Link from "next/link";
 import { updateCar } from "@/app/action/car";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 // สร้าง Type สำหรับ Client Form (รับมาจาก Prisma แต่ไม่ต้อง strict ทั้งหมดเพราะเป็น View)
 export default function EditCarForm({ car }: { car: any }) {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -14,11 +17,32 @@ export default function EditCarForm({ car }: { car: any }) {
 
     try {
       const formData = new FormData(e.currentTarget);
-      await updateCar(car.id, formData);
-      // updateCar มีการ redirect ไว้แล้วด้านใน
+
+      // ส่งข้อมูลไปอัปเดต (อิงตาม ID เดิมเพื่อจัดการ Relational DB)
+      const result = await updateCar(car.id, formData);
+      // เช็คสถานะที่ตอบกลับมาจาก Server Action
+      if (result?.success) {
+        toast.success("อัปเดตข้อมูลสำเร็จ", {
+          description: "ระบบได้ทำการบันทึกการเปลี่ยนแปลงเข้าสู่ฐานข้อมูลแล้ว",
+        });
+
+        // หมายเหตุ: หน้า Edit ไม่ควร reset() ฟอร์ม เพราะผู้ใช้ควรเห็นค่าล่าสุดที่เพิ่งแก้ไป
+
+        // หน่วงเวลาให้ผู้ใช้เห็น Toast 1.5 วินาที แล้วค่อยเปลี่ยนหน้า
+        setTimeout(() => {
+          router.push("/admin/cars");
+          router.refresh(); // รีเฟรชข้อมูลให้ตารางอัปเดต
+        }, 1500);
+      } else {
+        // ถ้าฝั่ง Server ส่ง success: false กลับมา
+        throw new Error(result?.message || "บันทึกข้อมูลไม่สำเร็จ");
+      }
     } catch (error) {
-      console.error("เกิดข้อผิดพลาด:", error);
-      alert("อัปเดตข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
+      console.error(error);
+      toast.error("บันทึกข้อมูลไม่สำเร็จ", {
+        description: "กรุณาตรวจสอบความถูกต้องของข้อมูลแล้วลองใหม่อีกครั้ง",
+      });
+    } finally {
       setIsLoading(false);
     }
   };
