@@ -14,24 +14,22 @@ export default function AdminCarsAddPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-
+    const form = e.currentTarget;
     try {
       // รวบรวมข้อมูลทั้งหมดจากฟอร์ม
-      const formData = new FormData(e.currentTarget);
+      const formData = new FormData(form);
 
       // ส่งข้อมูลไปให้ Server Action จัดการ (บันทึกลง DB)
       const result = await addCar(formData);
-      
       if (result?.success) {
         toast.success("บันทึกข้อมูลสำเร็จเรียบร้อยแล้ว", {
           description: "ระบบได้ทำการบันทึกข้อมูลรถยนต์เข้าสู่ฐานข้อมูลแล้ว",
         });
-        e.currentTarget.reset(); // Reset ฟอร์ม
-        
+        form.reset(); // Reset ฟอร์ม
         setTimeout(() => {
           router.push("/admin/cars");
           router.refresh();
-        }, 1500);
+        }, 1000);
       } else {
         throw new Error(result?.message || "บันทึกข้อมูลไม่สำเร็จ");
       }
@@ -40,6 +38,7 @@ export default function AdminCarsAddPage() {
       toast.error("บันทึกข้อมูลไม่สำเร็จ", {
         description: "กรุณาตรวจสอบความถูกต้องของข้อมูลแล้วลองใหม่อีกครั้ง",
       });
+    } finally {
       setIsLoading(false);
     }
   };

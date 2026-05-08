@@ -3,6 +3,9 @@
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { updateUserRole, deleteUser } from "@/app/action/user";
+import withReactContent from "sweetalert2-react-content";
+import Swal from "sweetalert2";
+import { toast } from "sonner";
 
 export default function UserTableRow({
   user,
@@ -14,6 +17,7 @@ export default function UserTableRow({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
+  const MySwal = withReactContent(Swal);
   // ป้องกันไม้ให้ Admin ระเบิดตัวเอง หรือยึดอำนาจตัวเอง
   const isSelf = user.id === currentUserId;
 
@@ -26,16 +30,52 @@ export default function UserTableRow({
   };
 
   const handleDelete = async () => {
-    if (
-      confirm(
-        `⚠️ คุณแน่ใจหรือไม่ว่าต้องการลบบัญชีผู้ใช้ "${user.name}" ออกจากระบบถาวร?`,
-      )
-    ) {
-      startTransition(async () => {
-        await deleteUser(user.id);
-        router.refresh();
-      });
-    }
+    MySwal.fire({
+      title: "ยืนยันการลบบัญชี?",
+      text: `คุณแน่ใจหรือไม่ว่าต้องการลบบัญชีผู้ใช้ "${user.name}" ออกจากระบบถาวร? การกระทำนี้ไม่สามารถย้อนกลับได้`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444", // สีแดงแจ้งเตือนอันตราย
+      cancelButtonColor: "#64748b", // สีเทาสำหรับปุ่มยกเลิก
+      confirmButtonText: "ลบบัญชีผู้ใช้",
+      cancelButtonText: "ยกเลิก",
+      background: "rgba(255, 255, 255, 0.85)", // พื้นหลังโปร่งแสง
+      customClass: {
+        popup:
+          "backdrop-blur-md dark:bg-slate-900/90 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-xl",
+        title: "text-gray-900 dark:text-white font-bold",
+        htmlContainer: "text-gray-600 dark:text-gray-300",
+        confirmButton:
+          "rounded-lg px-5 py-2.5 font-medium shadow-sm transition-colors",
+        cancelButton: "rounded-lg px-5 py-2.5 font-medium transition-colors",
+      },
+    }).then((result) => {
+      // 2. ถ้าผู้ใช้กดยืนยัน (OK)
+      if (result.isConfirmed) {
+        startTransition(async () => {
+          try {
+            const response = await deleteUser(user.id);
+            // เช็คสถานะ
+            if (response?.success !== false) {
+              toast.success("ลบผู้ใช้งานสำเร็จ", {
+                description: `บัญชีผู้ใช้ "${user.name}" ถูกนำออกจากระบบแล้ว`,
+              });
+              router.refresh();
+            } else {
+              toast.error("เกิดข้อผิดพลาด", {
+                description:
+                  "ไม่สามารถลบบัญชีผู้ใช้งานได้ กรุณาลองใหม่อีกครั้ง",
+              });
+            }
+          } catch (error) {
+            console.error(error);
+            toast.error("เกิดข้อผิดพลาด", {
+              description: "ไม่สามารถลบบัญชีผู้ใช้งานได้ กรุณาลองใหม่อีกครั้ง",
+            });
+          }
+        });
+      }
+    });
   };
 
   const getInitials = (name?: string) => {

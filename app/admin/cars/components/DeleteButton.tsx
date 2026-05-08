@@ -21,14 +21,16 @@ export default function DeleteButton({ id }: { id: string }) {
       cancelButtonColor: "#64748b",
       confirmButtonText: "ลบข้อมูล",
       cancelButtonText: "ยกเลิก",
-      background: "var(--bg-slate-900)", // Support Dark Mode
-      color: "var(--text-gray-100)",
+      background: "rgba(255, 255, 255, 0.85)",
       customClass: {
-        popup: "rounded-2xl border border-gray-100 dark:border-slate-800 shadow-xl",
+        popup:
+          "backdrop-blur-md dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-xl",
         title: "text-gray-900 dark:text-white font-bold",
-        confirmButton: "rounded-lg px-5 py-2.5 font-medium shadow-sm transition-colors",
-        cancelButton: "rounded-lg px-5 py-2.5 font-medium transition-colors"
-      }
+        htmlContainer: "text-gray-600 dark:text-gray-300",
+        confirmButton:
+          "rounded-lg px-5 py-2.5 font-medium shadow-sm transition-colors",
+        cancelButton: "rounded-lg px-5 py-2.5 font-medium transition-colors",
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         startTransition(async () => {
@@ -39,7 +41,8 @@ export default function DeleteButton({ id }: { id: string }) {
             });
           } catch (error) {
             toast.error("ไม่สามารถลบรถได้", {
-              description: (error as Error).message || "เกิดข้อผิดพลาดจากเซิร์ฟเวอร์",
+              description:
+                (error as Error).message || "เกิดข้อผิดพลาดจากเซิร์ฟเวอร์",
             });
           }
         });

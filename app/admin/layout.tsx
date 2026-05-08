@@ -24,7 +24,9 @@ export default async function AdminLayout({
       </div>
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
         <AdminNavbar user={user} />
-        <main className="flex-1 overflow-y-auto p-4 md:p-8">{children}</main>
+        <main className="flex-1 pt-16 md:pt-24 overflow-y-auto p-4 md:p-8">
+          {children}
+        </main>
       </div>
     </div>
   );
