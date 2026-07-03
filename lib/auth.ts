@@ -32,7 +32,9 @@ export async function signToken(payload: SessionPayload) {
  */
 export async function verifyToken(token: string) {
   try {
-    const { payload } = await jwtVerify(token, getJwtSecretKey());
+    const { payload } = await jwtVerify(token, getJwtSecretKey(), {
+      algorithms: ["HS256"],
+    });
     return payload as unknown as SessionPayload;
   } catch (error) {
     // หาก Token หมดอายุหรือถูกปลอมแปลง จะเข้าเงื่อนไขนี้และส่งค่า null กลับไป
