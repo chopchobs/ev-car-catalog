@@ -43,7 +43,7 @@ export default async function Navbar() {
                   />
                 </svg>
               </div>
-              <span className="g-linear-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent group-hover:to-cyan-600 dark:group-hover:to-cyan-400 transition-all duration-300">
+              <span className="bg-linear-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent group-hover:to-cyan-600 dark:group-hover:to-cyan-400 transition-all duration-300">
                 EVo Auto
               </span>
             </Link>

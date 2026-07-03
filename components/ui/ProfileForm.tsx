@@ -200,7 +200,7 @@ export default function ProfileForm({
           <button
             type="submit"
             disabled={isLoading}
-            className="px-8 py-3.5bg-linear-to-r from-gray-900 to-gray-800 hover:from-cyan-600 hover:to-blue-600 text-white font-bold rounded-xl shadow-lg transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+            className="px-8 py-3.5 bg-linear-to-r from-gray-900 to-gray-800 hover:from-cyan-600 hover:to-blue-600 text-white font-bold rounded-xl shadow-lg transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {isLoading ? (
               <>
