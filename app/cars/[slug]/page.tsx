@@ -12,7 +12,7 @@ import TestDriveModal from "@/components/ui/TestDriveModal";
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
 
@@ -54,7 +54,7 @@ export async function generateMetadata({
 export default async function CarDetailPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
   const [car, savedCarIds] = await Promise.all([

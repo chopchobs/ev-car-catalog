@@ -6,7 +6,7 @@ import Link from "next/link";
 export default async function ComparePage({
   searchParams,
 }: {
-  searchParams: { ids?: string };
+  searchParams: Promise<{ ids?: string }>;
 }) {
   // รับค่า ids จาก searchParams
   const { ids } = await searchParams;

@@ -5,7 +5,7 @@ import EditCarForm from "./EditCarForm";
 export default async function EditCarPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   // รองรับ Next.js 15+ (params.id เป็น Promise) ตามมาตรฐานใหม่
   const { id } = await params;
