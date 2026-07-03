@@ -17,12 +17,12 @@ export async function loginUser(formData: FormData) {
     // 1. ค้นหาอีเมลในฐานข้อมูลว่ามีตัวตนจริงไหม
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
-      return { error: "อีเมลไม่ถูกต้อง หรือไม่พบบัญชีผู้ใช้นี้ในระบบ" };
+      return { error: "อีเมลหรือรหัสผ่านไม่ถูกต้อง" };
     }
     // 2. เอารหัสผ่านที่พิมพ์ลงในฟอร์ม ไปย้อนกระบวนการเทียบกับ Hash ที่เก็บใน DB ว่าตรงกันหรือไม่
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
-      return { error: "รหัสผ่านไม่ถูกต้อง รบกวนตรวจสอบอีกครั้ง" };
+      return { error: "อีเมลหรือรหัสผ่านไม่ถูกต้อง" };
     }
     // 3. เอาเงื่อนไขที่บังคับเฉพาะ ADMIN ออก เพื่ออนุญาตสมาชิกล็อกอินได้
     // if (user.role !== "ADMIN") { ... }
